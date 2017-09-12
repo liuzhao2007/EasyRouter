@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.novoda:bintray-release:0.3.4'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -20,4 +21,14 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    userOrg = 'liuzhaowy2007'
+    groupId = 'com.android'
+    uploadName = 'EasyRouter'
+    publishVersion = '0.9.0'
+    desc = '简单、稳定、高性能的组件化路由框架'
+    website = 'https://github.com/liuzhao2007/EasyRouter'
+    licences = ['Apache-2.0']
 }

@@ -1,6 +1,9 @@
 apply plugin: 'java'
+apply plugin: 'bintray-release'
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.auto.service:auto-service:1.0-rc2'
@@ -8,4 +11,15 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.commons:commons-collections4:4.1'
     compile project(':annotation')
+}
+
+publish {
+    artifactId = 'router-compiler'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    desc = rootProject.description
+    website = rootProject.website
+    licences = rootProject.licences
 }
