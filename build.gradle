@@ -25,9 +25,9 @@ task clean(type: Delete) {
 
 ext {
     userOrg = 'liuzhaowy2007'
-    groupId = 'com.android'
+    groupId = 'com.router'
     uploadName = 'EasyRouter'
-    publishVersion = '0.9.0'
+    publishVersion = '0.9.1'
     desc = '简单、稳定、高性能的组件化路由框架'
     website = 'https://github.com/liuzhao2007/EasyRouter'
     licences = ['Apache-2.0']

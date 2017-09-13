@@ -5,7 +5,6 @@ import com.chinahr.android.m.dispatcher.annotation.DispatcherModules;
 import com.chinahr.android.m.dispatcher.annotation.ModuleService;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -36,7 +35,6 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
 import static com.squareup.javapoet.JavaFile.builder;
-import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
 
 /**
  * Created by liuzhao on 2017/7/27.
@@ -112,17 +110,31 @@ public class DispatcherProcessor extends AbstractProcessor {
     private TypeSpec generateModulesRouterInit(String[] moduleNames) {
         MethodSpec.Builder initActivityDispatcherMethod = MethodSpec.methodBuilder("initActivityDispatcher")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
+        MethodSpec.Builder initModuleServiceMethod = MethodSpec.methodBuilder("initModuleService")
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
         for (String module : moduleNames) {
-            initActivityDispatcherMethod.addStatement("com.chinahr.chrcommon.dispatcher.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
-                    CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
+            Class xClass = null;
+            try {
+                xClass = Class.forName(CompilerConstant.AutoCreateDispatcherPackage + "." + CompilerConstant.AutoCreateActivityMapPrefix + module);
+            } catch (Exception e) {
+            }
+            if (xClass != null) {
+                initActivityDispatcherMethod.addStatement("com.android.router.dispatcherimpl.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
+                        CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
+            }
+            Class sClass = null;
+            try {
+                sClass = Class.forName(CompilerConstant.AutoCreateDispatcherPackage + "." + CompilerConstant.AutoCreateActivityMapPrefix + module);
+            } catch (Exception e) {
+            }
+
+            if (sClass != null) {
+                initModuleServiceMethod.addStatement(CompilerConstant.AutoCreateActivityMapPrefix + module + ".initModuleService()");
+            }
         }
 
 
-        MethodSpec.Builder initModuleServiceMethod = MethodSpec.methodBuilder("initModuleService")
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
-
         for (String module : moduleNames) {
-            initModuleServiceMethod.addStatement(CompilerConstant.AutoCreateActivityMapPrefix + module + ".initModuleService()");
         }
 
         MethodSpec.Builder initMethod = MethodSpec.methodBuilder("init")
@@ -170,12 +182,12 @@ public class DispatcherProcessor extends AbstractProcessor {
         MethodSpec.Builder initMethod = MethodSpec.methodBuilder("initModuleService")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
         for (Element element : moduleServiceElements) {
-            initMethod.addStatement("com.chinahr.chrcommon.dispatcher.moduleinteract.ModuleServiceManager.register(com.chinahr.chrcommon.dispatcher.moduleinteract.BaseModuleService.$T.class, new $T()) ",
+            initMethod.addStatement("com.android.router.dispatcherimpl.moduleinteract.ModuleServiceManager.register(com.android.router.dispatcherimpl.moduleinteract.BaseModuleService.$T.class, new $T()) ",
                     ClassName.get((TypeElement) element), ClassName.get((TypeElement) element));
         }
 
 
-        TypeElement routerInitializerType = elementUtils.getTypeElement("com.chinahr.framework.dispatcher.IActivityInitMap");
+        TypeElement routerInitializerType = elementUtils.getTypeElement("com.android.router.idispatcher.IActivityInitMap");
         return TypeSpec.classBuilder(CompilerConstant.AutoCreateActivityMapPrefix + moduleName)
                 .addSuperinterface(ClassName.get(routerInitializerType))
                 .addModifiers(Modifier.PUBLIC)

@@ -35,7 +35,7 @@ dependencies {
 }
 
 publish {
-    artifactId = 'router-api'
+    artifactId = 'easyrouter'
     userOrg = rootProject.userOrg
     groupId = rootProject.groupId
     uploadName = rootProject.uploadName
