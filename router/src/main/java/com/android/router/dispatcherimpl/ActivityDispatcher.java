@@ -10,6 +10,7 @@ import com.android.router.dispatcherimpl.model.DisPatcherInfo;
 import com.android.router.dispatcherimpl.model.IntentWraper;
 import com.android.router.idispatcher.IActivityDispatcher;
 import com.android.router.idispatcher.IActivityInitMap;
+import com.android.router.util.LogUtil;
 
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ import java.util.Set;
 public class ActivityDispatcher implements IActivityDispatcher {
 
     private static ActivityDispatcher activityDispatcher;
-    public static String SCHEME = "chinahr";
+    public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
     public HashMap<String, Class<? extends Activity>> activityMaps = new HashMap<String, Class<? extends Activity>>();
 
@@ -94,6 +95,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
             }
         } catch (Exception e) {
+            LogUtil.e(e);
             return false;
         }
         return true;
@@ -231,9 +233,12 @@ public class ActivityDispatcher implements IActivityDispatcher {
             currentUri = Uri.parse(currentUrl);
             currentHost = currentUri.getHost();
             currentPathSegmentSize = currentUri.getPathSegments().size();
-            if (TextUtils.equals(currentHost, targetHost) && pathSegmentSize == currentPathSegmentSize
-                    && TextUtils.equals(currentUri.getPathSegments().get(0), targetUri.getPathSegments().get(0))) {
+            if (TextUtils.equals(currentHost, targetHost) && pathSegmentSize == currentPathSegmentSize) {
                 //此处有优化空间。
+                if (pathSegmentSize > 0 && currentPathSegmentSize > 0
+                        && !TextUtils.equals(currentUri.getPathSegments().get(0), targetUri.getPathSegments().get(0))) {
+                    break;
+                }
                 DisPatcherInfo disPatcherInfo = new DisPatcherInfo();
                 disPatcherInfo.targetClass = activityMaps.get(currentUrl);
                 disPatcherInfo.matchUrl = currentUrl;

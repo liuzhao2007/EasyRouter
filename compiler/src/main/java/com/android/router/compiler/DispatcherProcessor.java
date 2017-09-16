@@ -110,31 +110,15 @@ public class DispatcherProcessor extends AbstractProcessor {
     private TypeSpec generateModulesRouterInit(String[] moduleNames) {
         MethodSpec.Builder initActivityDispatcherMethod = MethodSpec.methodBuilder("initActivityDispatcher")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
+        for (String module : moduleNames) {
+            initActivityDispatcherMethod.addStatement("com.android.router.dispatcherimpl.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
+                    CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
+        }
+
         MethodSpec.Builder initModuleServiceMethod = MethodSpec.methodBuilder("initModuleService")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
         for (String module : moduleNames) {
-            Class xClass = null;
-            try {
-                xClass = Class.forName(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage + "." + com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module);
-            } catch (Exception e) {
-            }
-            if (xClass != null) {
-                initActivityDispatcherMethod.addStatement("com.android.router.dispatcherimpl.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
-                        com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
-            }
-            Class sClass = null;
-            try {
-                sClass = Class.forName(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage + "." + com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module);
-            } catch (Exception e) {
-            }
-
-            if (sClass != null) {
-                initModuleServiceMethod.addStatement(com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module + ".initModuleService()");
-            }
-        }
-
-
-        for (String module : moduleNames) {
+            initModuleServiceMethod.addStatement(CompilerConstant.AutoCreateActivityMapPrefix + module + ".initModuleService()");
         }
 
         MethodSpec.Builder initMethod = MethodSpec.methodBuilder("init")

@@ -8,6 +8,8 @@ import java.io.StringWriter;
 
 public class LogUtil {
     private static String DEFAULT_TAG = "easyrouter";
+
+
     private static boolean debug = true;
 
     private static String getMessage(String msg) {
@@ -116,4 +118,7 @@ public class LogUtil {
         Log.w(DEFAULT_TAG, getMessage(msg));
     }
 
+    public static void setDebug(boolean debug) {
+        LogUtil.debug = debug;
+    }
 }
