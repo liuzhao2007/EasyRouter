@@ -1,4 +1,4 @@
-package com.chinahr.android.m.dispatcher.annotation;
+package com.android.router.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

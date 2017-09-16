@@ -16,8 +16,13 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/liuzhaowy2007/maven" }
+    }
+    //加上这些
+    tasks.withType(Javadoc) {
+        options{ encoding "UTF-8"
+            charSet 'UTF-8'
+            links "http://docs.oracle.com/javase/7/docs/api"
+        }
     }
 }
 
@@ -29,7 +34,7 @@ ext {
     userOrg = 'liuzhaowy2007'
     groupId = 'com.easyrouter'
     uploadName = 'EasyRouter'
-    publishVersion = '0.9.8'
+    publishVersion = '0.9.9'
     desc = '简单、稳定、高性能的组件化路由框架'
     website = 'https://github.com/liuzhao2007/EasyRouter'
     licences = ['Apache-2.0']

@@ -1,8 +1,8 @@
-package com.chinahr.android.m.dispatcher;
+package com.android.router.compiler;
 
-import com.chinahr.android.m.dispatcher.annotation.DisPatcher;
-import com.chinahr.android.m.dispatcher.annotation.DispatcherModules;
-import com.chinahr.android.m.dispatcher.annotation.ModuleService;
+import com.android.router.annotation.DisPatcher;
+import com.android.router.annotation.DispatcherModules;
+import com.android.router.annotation.ModuleService;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -39,7 +39,7 @@ import static com.squareup.javapoet.JavaFile.builder;
 /**
  * Created by liuzhao on 2017/7/27.
  */
-@SupportedOptions(CompilerConstant.KEY_MODULE_NAME)
+@SupportedOptions(com.android.router.compiler.CompilerConstant.KEY_MODULE_NAME)
 @AutoService(Processor.class)
 public class DispatcherProcessor extends AbstractProcessor {
     private Messager mMessager;
@@ -58,7 +58,7 @@ public class DispatcherProcessor extends AbstractProcessor {
 
         Map<String, String> options = processingEnv.getOptions();
         if (MapUtils.isNotEmpty(options)) {
-            moduleName = options.get(CompilerConstant.KEY_MODULE_NAME);
+            moduleName = options.get(com.android.router.compiler.CompilerConstant.KEY_MODULE_NAME);
             set.add(moduleName);
         }
     }
@@ -90,12 +90,12 @@ public class DispatcherProcessor extends AbstractProcessor {
             TypeSpec type = getRouterTableInitializer(elementDispatchers, elementModuleServices);
             TypeSpec type_ModuleService = null;
             if (type != null) {
-                builder(CompilerConstant.AutoCreateDispatcherPackage, type).build().writeTo(mFiler);
+                builder(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage, type).build().writeTo(mFiler);
             }
             if (moduleNames != null && moduleNames.length > 0) {
                 TypeSpec typeInit = generateModulesRouterInit(moduleNames);
                 if (typeInit != null) {
-                    builder(CompilerConstant.AutoCreateDispatcherPackage, typeInit).build().writeTo(mFiler);
+                    builder(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage, typeInit).build().writeTo(mFiler);
                 }
             }
         } catch (FilerException e) {
@@ -115,21 +115,21 @@ public class DispatcherProcessor extends AbstractProcessor {
         for (String module : moduleNames) {
             Class xClass = null;
             try {
-                xClass = Class.forName(CompilerConstant.AutoCreateDispatcherPackage + "." + CompilerConstant.AutoCreateActivityMapPrefix + module);
+                xClass = Class.forName(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage + "." + com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module);
             } catch (Exception e) {
             }
             if (xClass != null) {
                 initActivityDispatcherMethod.addStatement("com.android.router.dispatcherimpl.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
-                        CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
+                        com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
             }
             Class sClass = null;
             try {
-                sClass = Class.forName(CompilerConstant.AutoCreateDispatcherPackage + "." + CompilerConstant.AutoCreateActivityMapPrefix + module);
+                sClass = Class.forName(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage + "." + com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module);
             } catch (Exception e) {
             }
 
             if (sClass != null) {
-                initModuleServiceMethod.addStatement(CompilerConstant.AutoCreateActivityMapPrefix + module + ".initModuleService()");
+                initModuleServiceMethod.addStatement(com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + module + ".initModuleService()");
             }
         }
 
@@ -188,7 +188,7 @@ public class DispatcherProcessor extends AbstractProcessor {
 
 
         TypeElement routerInitializerType = elementUtils.getTypeElement("com.android.router.idispatcher.IActivityInitMap");
-        return TypeSpec.classBuilder(CompilerConstant.AutoCreateActivityMapPrefix + moduleName)
+        return TypeSpec.classBuilder(com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + moduleName)
                 .addSuperinterface(ClassName.get(routerInitializerType))
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(routerInitBuilder.build())

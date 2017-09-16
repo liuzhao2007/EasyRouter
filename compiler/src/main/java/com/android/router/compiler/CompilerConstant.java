@@ -1,4 +1,4 @@
-package com.chinahr.android.m.dispatcher;
+package com.android.router.compiler;
 
 /**
  * Created by liuzhao on 2017/7/29.
