@@ -23,11 +23,6 @@ public class IntentWraper {
     public int mRequestCode = -1;
     public RouterCallBack mRouterCallBack;
 
-    public IntentWraper withFlags(int flag) {
-        this.mIntentFlag = flag;
-        return this;
-    }
-
     public IntentWraper(String string) {
         mUrl = string;
         mBundle = new Bundle();
@@ -44,6 +39,11 @@ public class IntentWraper {
     public void open(Activity activity, int requestCode) {
         mRequestCode = requestCode;
         ActivityDispatcher.getActivityDispatcher().open(activity, this);
+    }
+
+    public IntentWraper withFlags(int flag) {
+        this.mIntentFlag = flag;
+        return this;
     }
 
     public IntentWraper withRequestCode(int requestCode) {

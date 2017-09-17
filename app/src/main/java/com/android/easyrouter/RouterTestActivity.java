@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.android.router.annotation.DisPatcher;
+import com.android.router.util.EasyRouterConstant;
 
 /**
  * Created by liuzhao on 2017/9/16.
@@ -18,6 +19,6 @@ public class RouterTestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.routertest);
         tv_routertest = (TextView) findViewById(R.id.tv_routertest);
-
+        tv_routertest.setText(getIntent().getStringExtra(EasyRouterConstant.ORIGINALURL));
     }
 }

@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-
 import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.callback.RouterCallBack;
 import com.android.router.dispatcherimpl.model.DisPatcherInfo;
 import com.android.router.dispatcherimpl.model.IntentWraper;
 import com.android.router.idispatcher.IActivityDispatcher;
 import com.android.router.idispatcher.IActivityInitMap;
+import com.android.router.util.EasyRouterConstant;
 import com.android.router.util.LogUtil;
 
 import java.net.URLDecoder;
@@ -90,6 +90,8 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 throw new RuntimeException("EasyRouter url mustn't be null");
             }
             //need to redirect
+
+            intentWraper.withString(EasyRouterConstant.ORIGINALURL, intentWraper.mUrl);
 
             intentWraper.mUrl = encodeUrl(intentWraper.mUrl);
             DisPatcherInfo disPatcherInfo = getTargetClass(intentWraper.mUrl);

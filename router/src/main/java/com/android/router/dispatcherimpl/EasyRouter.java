@@ -3,7 +3,6 @@ package com.android.router.dispatcherimpl;
 import android.app.Activity;
 import android.app.Application;
 
-import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.callback.RouterCallBack;
 import com.android.router.dispatcherimpl.model.IntentWraper;
 import com.android.router.util.LogUtil;
@@ -32,7 +31,6 @@ public class EasyRouter {
                 Class routerInit = Class.forName("com.android.easyrouter.RouterInit");
                 if (routerInit != null) {
                     routerInit.getMethod("init").invoke(null);
-                    isInited = true;
                 }
                 if (mEasyRouter == null) {
                     synchronized (EasyRouter.class) {
@@ -41,6 +39,7 @@ public class EasyRouter {
                         }
                     }
                 }
+                isInited = true;
             } catch (Exception e) {
                 LogUtil.e(e);
             }
