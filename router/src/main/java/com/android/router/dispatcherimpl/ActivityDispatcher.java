@@ -29,6 +29,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
     public HashMap<String, Class<? extends Activity>> activityMaps = new HashMap<String, Class<? extends Activity>>();
     private static RouterCallBack mDefaultRouterCallBack;
 
+
     private static final String PARAM_URL = "url";//获取需要编码的url
     private static final String CHARSET = "UTF-8";//编码的字符集
 
@@ -45,6 +46,10 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
         }
         return activityDispatcher;
+    }
+
+    public void setDefaultRouterCallBack(RouterCallBack mDefaultRouterCallBack) {
+        ActivityDispatcher.mDefaultRouterCallBack = mDefaultRouterCallBack;
     }
 
     public void initActivityMaps(IActivityInitMap activityInitMap) {
@@ -89,10 +94,14 @@ public class ActivityDispatcher implements IActivityDispatcher {
             intentWraper.mUrl = encodeUrl(intentWraper.mUrl);
             DisPatcherInfo disPatcherInfo = getTargetClass(intentWraper.mUrl);
             if (disPatcherInfo == null) {
-                routerCallBack.onLost();
+                if (routerCallBack != null) {
+                    routerCallBack.onLost();
+                }
                 return false;
             }
-            routerCallBack.onFound();
+            if (routerCallBack != null) {
+                routerCallBack.onFound();
+            }
             Intent intent = new Intent(activity == null ? EasyRouter.mApplication : activity, disPatcherInfo.targetClass);
             intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
             intent.putExtras(intentWraper.mBundle);
@@ -108,9 +117,13 @@ public class ActivityDispatcher implements IActivityDispatcher {
                     activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
                 }
             }
-            routerCallBack.onOpenSuccess();
+            if (routerCallBack != null) {
+                routerCallBack.onOpenSuccess();
+            }
         } catch (Exception e) {
-            routerCallBack.onOpenFailed();
+            if (routerCallBack != null) {
+                routerCallBack.onOpenFailed();
+            }
             LogUtil.e(e);
             return false;
         }

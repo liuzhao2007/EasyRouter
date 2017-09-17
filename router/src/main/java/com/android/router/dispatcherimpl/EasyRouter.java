@@ -3,6 +3,7 @@ package com.android.router.dispatcherimpl;
 import android.app.Activity;
 import android.app.Application;
 
+import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.callback.RouterCallBack;
 import com.android.router.dispatcherimpl.model.IntentWraper;
 import com.android.router.util.LogUtil;
@@ -14,24 +15,17 @@ import com.android.router.util.LogUtil;
 public class EasyRouter {
     public static boolean isInited;
     public static Application mApplication;
-    public static EasyRouter mEasyRouter;
+    private static EasyRouter mEasyRouter;
 
     private EasyRouter() {
     }
 
-    public static EasyRouter setScheme(String scheme) {
-        if (mEasyRouter == null) {
-            synchronized (EasyRouter.class) {
-                if (mEasyRouter == null) {
-                    mEasyRouter = new EasyRouter();
-                    ActivityDispatcher.getActivityDispatcher().setScheme(scheme);
-                }
-            }
-        }
-        return mEasyRouter;
+    public EasyRouter setScheme(String scheme) {
+        ActivityDispatcher.getActivityDispatcher().setScheme(scheme);
+        return this;
     }
 
-    public void init(Application application) {
+    public static EasyRouter init(Application application) {
         if (!isInited) {
             mApplication = application;
             try {
@@ -40,10 +34,18 @@ public class EasyRouter {
                     routerInit.getMethod("init").invoke(null);
                     isInited = true;
                 }
+                if (mEasyRouter == null) {
+                    synchronized (EasyRouter.class) {
+                        if (mEasyRouter == null) {
+                            mEasyRouter = new EasyRouter();
+                        }
+                    }
+                }
             } catch (Exception e) {
                 LogUtil.e(e);
             }
         }
+        return mEasyRouter;
     }
 
     public static IntentWraper with(String url) {
@@ -76,6 +78,14 @@ public class EasyRouter {
     public EasyRouter setDebug(boolean isDebug) {
         LogUtil.setDebug(isDebug);
         LogUtil.i("EasyRouter debug open");
+        return this;
+    }
+
+    public EasyRouter setDefaultRouterCallBack(RouterCallBack defaultRouterCallBack) {
+        if (defaultRouterCallBack != null) {
+            ActivityDispatcher.getActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
+        }
+        LogUtil.i("EasyRouter setDefaultRouterCallBack");
         return this;
     }
 

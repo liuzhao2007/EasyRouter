@@ -9,7 +9,7 @@ import com.android.router.util.LogUtil;
 public class DefaultRouterCallBack implements RouterCallBack {
     @Override
     public void onFound() {
-        LogUtil.i("onFound please cheak for reason");
+        LogUtil.i("onFound");
     }
 
     @Override

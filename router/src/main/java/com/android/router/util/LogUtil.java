@@ -7,9 +7,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class LogUtil {
+
     private static String DEFAULT_TAG = "easyrouter";
-
-
     private static boolean debug = true;
 
     private static String getMessage(String msg) {
