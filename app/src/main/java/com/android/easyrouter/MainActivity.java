@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.router.annotation.DisPatcher;
+import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.dispatcherimpl.EasyRouter;
 
 /**
@@ -20,7 +21,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.bt_jump).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EasyRouter.open("easyrouter://routertest");
+                EasyRouter.open("easyrouter://routertest",
+                        new DefaultRouterCallBack());
             }
         });
 

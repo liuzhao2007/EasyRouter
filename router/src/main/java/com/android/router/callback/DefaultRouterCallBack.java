@@ -9,12 +9,12 @@ import com.android.router.util.LogUtil;
 public class DefaultRouterCallBack implements RouterCallBack {
     @Override
     public void onFound() {
-        LogUtil.i("onFound");
+        LogUtil.i("onFound please cheak for reason");
     }
 
     @Override
     public void onLost() {
-        LogUtil.e("onLost");
+        LogUtil.e("onLost please cheak for reason");
     }
 
     @Override
@@ -24,6 +24,6 @@ public class DefaultRouterCallBack implements RouterCallBack {
 
     @Override
     public void onOpenFailed() {
-        LogUtil.e("onOpenFailed");
+        LogUtil.e("onOpenFailed please cheak for reason");
     }
 }

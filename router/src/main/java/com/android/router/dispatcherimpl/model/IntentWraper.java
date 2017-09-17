@@ -37,6 +37,10 @@ public class IntentWraper {
         ActivityDispatcher.getActivityDispatcher().open(null, this);
     }
 
+    public void open(RouterCallBack routerCallBack) {
+        ActivityDispatcher.getActivityDispatcher().open(null, withRouterCallBack(routerCallBack));
+    }
+
     public void open(Activity activity, int requestCode) {
         mRequestCode = requestCode;
         ActivityDispatcher.getActivityDispatcher().open(activity, this);
