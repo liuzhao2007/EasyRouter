@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 
+import com.android.router.callback.DefaultRouterCallBack;
+import com.android.router.callback.RouterCallBack;
 import com.android.router.dispatcherimpl.model.DisPatcherInfo;
 import com.android.router.dispatcherimpl.model.IntentWraper;
 import com.android.router.idispatcher.IActivityDispatcher;
@@ -21,11 +23,11 @@ import java.util.Set;
  * Created by liuzhao on 16/10/21.
  */
 public class ActivityDispatcher implements IActivityDispatcher {
-
     private static ActivityDispatcher activityDispatcher;
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
     public HashMap<String, Class<? extends Activity>> activityMaps = new HashMap<String, Class<? extends Activity>>();
+    private static RouterCallBack mDefaultRouterCallBack;
 
     private static final String PARAM_URL = "url";//获取需要编码的url
     private static final String CHARSET = "UTF-8";//编码的字符集
@@ -38,6 +40,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
             synchronized (ActivityDispatcher.class) {
                 if (activityDispatcher == null) {
                     activityDispatcher = new ActivityDispatcher();
+                    mDefaultRouterCallBack = new DefaultRouterCallBack();
                 }
             }
         }
@@ -48,12 +51,19 @@ public class ActivityDispatcher implements IActivityDispatcher {
         activityInitMap.initActivityMap(activityMaps);
     }
 
+    @Override
     public boolean open(String url) {
-        return open(null, url);
+        return open(null, url, null);
     }
 
+    @Override
     public boolean open(Activity activity, String url) {
-        return realOpen(activity, url, null);
+        return open(activity, url, null);
+    }
+
+    @Override
+    public boolean open(Activity activity, String url, RouterCallBack routerCallBack) {
+        return realOpen(activity, new IntentWraper(url).withRouterCallBack(routerCallBack));
     }
 
     public IntentWraper withUrl(String string) {
@@ -61,26 +71,30 @@ public class ActivityDispatcher implements IActivityDispatcher {
     }
 
     public void open(Activity activity, IntentWraper intentWraper) {
-        realOpen(activity, intentWraper.mUrl, intentWraper);
+        realOpen(activity, intentWraper);
     }
 
-    private boolean realOpen(Activity activity, String url, IntentWraper intentWraper) {
+    private boolean realOpen(Activity activity, IntentWraper intentWraper) {
+        RouterCallBack routerCallBack = mDefaultRouterCallBack;
         try {
-            if (TextUtils.isEmpty(url) || !canOpen(url)) {
-                return false;
+            if (intentWraper.mRouterCallBack != null) {
+                routerCallBack = intentWraper.mRouterCallBack;
+            }
+
+            if (TextUtils.isEmpty(intentWraper.mUrl) || !canOpen(intentWraper.mUrl)) {
+                throw new RuntimeException("EasyRouter url mustn't be null");
             }
             //need to redirect
 
-            url = encodeUrl(url);
-            DisPatcherInfo disPatcherInfo = getTargetClass(url);
+            intentWraper.mUrl = encodeUrl(intentWraper.mUrl);
+            DisPatcherInfo disPatcherInfo = getTargetClass(intentWraper.mUrl);
             if (disPatcherInfo == null) {
+                routerCallBack.onLost();
                 return false;
             }
-            if (intentWraper == null) {
-                intentWraper = new IntentWraper();
-            }
+            routerCallBack.onFound();
             Intent intent = new Intent(activity == null ? EasyRouter.mApplication : activity, disPatcherInfo.targetClass);
-            intent = setParams(intent, url, disPatcherInfo.matchUrl);
+            intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
             intent.putExtras(intentWraper.mBundle);
             if (intentWraper.mIntentFlag != DEFAULTVALUE) {
                 intent.addFlags(intentWraper.mIntentFlag);
@@ -94,7 +108,9 @@ public class ActivityDispatcher implements IActivityDispatcher {
                     activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
                 }
             }
+            routerCallBack.onOpenSuccess();
         } catch (Exception e) {
+            routerCallBack.onOpenFailed();
             LogUtil.e(e);
             return false;
         }

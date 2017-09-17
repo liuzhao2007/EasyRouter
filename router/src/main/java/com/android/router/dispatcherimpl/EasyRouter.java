@@ -11,22 +11,44 @@ import com.android.router.util.LogUtil;
  */
 
 public class EasyRouter {
-
+    public static boolean isInited;
     public static Application mApplication;
+    public static EasyRouter mEasyRouter;
 
-    public static void init(Application application) {
-        mApplication = application;
-        try {
-            Class routerInit = Class.forName("com.android.easyrouter.RouterInit");
-            if (routerInit != null) {
-                routerInit.getMethod("init").invoke(null);
+    private EasyRouter() {
+    }
+
+    public static EasyRouter setScheme(String scheme) {
+        if (mEasyRouter == null) {
+            synchronized (EasyRouter.class) {
+                if (mEasyRouter == null) {
+                    mEasyRouter = new EasyRouter();
+                    ActivityDispatcher.getActivityDispatcher().setScheme(scheme);
+                }
             }
-        } catch (Exception e) {
-            LogUtil.e(e);
+        }
+        return mEasyRouter;
+    }
+
+    public void init(Application application) {
+        if (!isInited) {
+            mApplication = application;
+            try {
+                Class routerInit = Class.forName("com.android.easyrouter.RouterInit");
+                if (routerInit != null) {
+                    routerInit.getMethod("init").invoke(null);
+                    isInited = true;
+                }
+            } catch (Exception e) {
+                LogUtil.e(e);
+            }
         }
     }
 
     public static IntentWraper with(String url) {
+        if (!isInited) {
+            LogUtil.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
+        }
         return ActivityDispatcher.getActivityDispatcher().withUrl(url);
     }
 
@@ -35,10 +57,14 @@ public class EasyRouter {
     }
 
     public static boolean open(Activity activity, String url) {
+        if (!isInited) {
+            LogUtil.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
+            return false;
+        }
         return ActivityDispatcher.getActivityDispatcher().open(activity, url);
     }
 
-    public static void setDebug(boolean isDebug) {
+    public void setDebug(boolean isDebug) {
         LogUtil.setDebug(isDebug);
         LogUtil.i("EasyRouter debug open");
     }

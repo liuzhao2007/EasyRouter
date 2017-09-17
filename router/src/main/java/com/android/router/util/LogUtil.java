@@ -96,7 +96,6 @@ public class LogUtil {
         Log.e(DEFAULT_TAG, string);
     }
 
-
     public static void e(String msg) {
         if (!debug) {
             return;

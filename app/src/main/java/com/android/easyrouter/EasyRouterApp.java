@@ -13,7 +13,7 @@ public class EasyRouterApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        EasyRouter.init(EasyRouterApp.this);
+        EasyRouter.setScheme("easyrouter").init(EasyRouterApp.this);
 
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 
+import com.android.router.callback.RouterCallBack;
 import com.android.router.dispatcherimpl.ActivityDispatcher;
 
 import java.io.Serializable;
@@ -20,14 +21,11 @@ public class IntentWraper {
     public int mOutAnimation = -1;
     public int mIntentFlag = -1;
     public int mRequestCode = -1;
+    public RouterCallBack mRouterCallBack;
 
     public IntentWraper withFlags(int flag) {
         this.mIntentFlag = flag;
         return this;
-    }
-
-    public IntentWraper() {
-        mBundle = new Bundle();
     }
 
     public IntentWraper(String string) {
@@ -42,6 +40,16 @@ public class IntentWraper {
     public void open(Activity activity, int requestCode) {
         mRequestCode = requestCode;
         ActivityDispatcher.getActivityDispatcher().open(activity, this);
+    }
+
+    public IntentWraper withRequestCode(int requestCode) {
+        mRequestCode = requestCode;
+        return this;
+    }
+
+    public IntentWraper withRouterCallBack(RouterCallBack routerCallBack) {
+        mRouterCallBack = routerCallBack;
+        return this;
     }
 
     public IntentWraper withTransition(int inAnimation, int outAnimation) {
