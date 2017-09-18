@@ -1,14 +1,17 @@
-package com.android.router.dispatcherimpl.model;
+package com.android.router.dispatcher.dispatcherimpl.model;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 
 
-import com.android.router.callback.RouterCallBack;
-import com.android.router.dispatcherimpl.ActivityDispatcher;
+import com.android.router.callback.IRouterCallBack;
+import com.android.router.dispatcher.dispatcherimpl.ActivityDispatcher;
+import com.android.router.intercept.IInterceptor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by liuzhao on 2017/7/27.
@@ -21,24 +24,33 @@ public class IntentWraper {
     public int mOutAnimation = -1;
     public int mIntentFlag = -1;
     public int mRequestCode = -1;
-    public RouterCallBack mRouterCallBack;
+    public IRouterCallBack mRouterCallBack;
+
+    public List<IInterceptor> mInterceptors = new ArrayList<>();
 
     public IntentWraper(String string) {
         mUrl = string;
         mBundle = new Bundle();
     }
 
-    public void open() {
-        ActivityDispatcher.getActivityDispatcher().open(null, this);
+    public boolean open() {
+        return open(null);
     }
 
-    public void open(RouterCallBack routerCallBack) {
-        ActivityDispatcher.getActivityDispatcher().open(null, withRouterCallBack(routerCallBack));
+    public boolean open(IRouterCallBack routerCallBack) {
+        return ActivityDispatcher.getActivityDispatcher().open(null, withRouterCallBack(routerCallBack));
     }
 
-    public void open(Activity activity, int requestCode) {
+    public boolean open(Activity activity, int requestCode) {
         mRequestCode = requestCode;
-        ActivityDispatcher.getActivityDispatcher().open(activity, this);
+        return ActivityDispatcher.getActivityDispatcher().open(activity, this);
+    }
+
+    public IntentWraper addInterceptor(IInterceptor interceptor) {
+        if (interceptor != null) {
+            mInterceptors.add(interceptor);
+        }
+        return this;
     }
 
     public IntentWraper withFlags(int flag) {
@@ -51,7 +63,7 @@ public class IntentWraper {
         return this;
     }
 
-    public IntentWraper withRouterCallBack(RouterCallBack routerCallBack) {
+    public IntentWraper withRouterCallBack(IRouterCallBack routerCallBack) {
         mRouterCallBack = routerCallBack;
         return this;
     }

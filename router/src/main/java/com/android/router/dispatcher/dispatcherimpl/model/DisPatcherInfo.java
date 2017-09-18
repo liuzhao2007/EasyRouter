@@ -1,4 +1,4 @@
-package com.android.router.dispatcherimpl.model;
+package com.android.router.dispatcher.dispatcherimpl.model;
 
 /**
  * Created by liuzhao on 16/12/9.

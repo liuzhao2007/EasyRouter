@@ -1,10 +1,10 @@
-package com.android.router.dispatcherimpl;
+package com.android.router.dispatcher.dispatcherimpl;
 
 import android.app.Activity;
 import android.app.Application;
 
-import com.android.router.callback.RouterCallBack;
-import com.android.router.dispatcherimpl.model.IntentWraper;
+import com.android.router.callback.IRouterCallBack;
+import com.android.router.dispatcher.dispatcherimpl.model.IntentWraper;
 import com.android.router.util.LogUtil;
 
 /**
@@ -58,7 +58,7 @@ public class EasyRouter {
         return open(null, url);
     }
 
-    public static boolean open(String url, RouterCallBack routerCallBack) {
+    public static boolean open(String url, IRouterCallBack routerCallBack) {
         return open(null, url, routerCallBack);
     }
 
@@ -66,7 +66,7 @@ public class EasyRouter {
         return open(activity, url, null);
     }
 
-    public static boolean open(Activity activity, String url, RouterCallBack routerCallBack) {
+    public static boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
         if (!isInited) {
             LogUtil.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
             return false;
@@ -80,7 +80,7 @@ public class EasyRouter {
         return this;
     }
 
-    public EasyRouter setDefaultRouterCallBack(RouterCallBack defaultRouterCallBack) {
+    public EasyRouter setDefaultRouterCallBack(IRouterCallBack defaultRouterCallBack) {
         if (defaultRouterCallBack != null) {
             ActivityDispatcher.getActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
         }

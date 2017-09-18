@@ -1,4 +1,4 @@
-package com.android.router.dispatcherimpl.moduleinteract;
+package com.android.router.dispatcher.dispatcherimpl.moduleinteract;
 
 /**
  * Created by liuzhao on 2017/08/06.

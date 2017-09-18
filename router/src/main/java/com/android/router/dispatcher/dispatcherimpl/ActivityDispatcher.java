@@ -1,4 +1,4 @@
-package com.android.router.dispatcherimpl;
+package com.android.router.dispatcher.dispatcherimpl;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,15 +6,17 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.android.router.callback.DefaultRouterCallBack;
-import com.android.router.callback.RouterCallBack;
-import com.android.router.dispatcherimpl.model.DisPatcherInfo;
-import com.android.router.dispatcherimpl.model.IntentWraper;
-import com.android.router.idispatcher.IActivityDispatcher;
-import com.android.router.idispatcher.IActivityInitMap;
+import com.android.router.callback.IRouterCallBack;
+import com.android.router.dispatcher.dispatcherimpl.model.DisPatcherInfo;
+import com.android.router.dispatcher.dispatcherimpl.model.IntentWraper;
+import com.android.router.dispatcher.idispatcher.IActivityDispatcher;
+import com.android.router.dispatcher.idispatcher.IActivityInitMap;
+import com.android.router.intercept.IInterceptor;
 import com.android.router.util.EasyRouterConstant;
 import com.android.router.util.LogUtil;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +29,8 @@ public class ActivityDispatcher implements IActivityDispatcher {
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
     public HashMap<String, Class<? extends Activity>> activityMaps = new HashMap<String, Class<? extends Activity>>();
-    private static RouterCallBack mDefaultRouterCallBack;
+    private static IRouterCallBack mDefaultRouterCallBack;
+    private static IInterceptor mDefaultIntercept;
 
 
     private static final String PARAM_URL = "url";//获取需要编码的url
@@ -48,12 +51,20 @@ public class ActivityDispatcher implements IActivityDispatcher {
         return activityDispatcher;
     }
 
-    public void setDefaultRouterCallBack(RouterCallBack mDefaultRouterCallBack) {
-        ActivityDispatcher.mDefaultRouterCallBack = mDefaultRouterCallBack;
+    public void setRouterIntercept(IInterceptor interceptor) {
+        mDefaultIntercept = interceptor;
+    }
+
+    public void setDefaultRouterCallBack(IRouterCallBack defaultRouterCallBack) {
+        mDefaultRouterCallBack = defaultRouterCallBack;
     }
 
     public void initActivityMaps(IActivityInitMap activityInitMap) {
         activityInitMap.initActivityMap(activityMaps);
+    }
+
+    public IntentWraper withUrl(String string) {
+        return new IntentWraper(string);
     }
 
     @Override
@@ -67,20 +78,16 @@ public class ActivityDispatcher implements IActivityDispatcher {
     }
 
     @Override
-    public boolean open(Activity activity, String url, RouterCallBack routerCallBack) {
+    public boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
         return realOpen(activity, new IntentWraper(url).withRouterCallBack(routerCallBack));
     }
 
-    public IntentWraper withUrl(String string) {
-        return new IntentWraper(string);
-    }
-
-    public void open(Activity activity, IntentWraper intentWraper) {
-        realOpen(activity, intentWraper);
+    public boolean open(Activity activity, IntentWraper intentWraper) {
+        return realOpen(activity, intentWraper);
     }
 
     private boolean realOpen(Activity activity, IntentWraper intentWraper) {
-        RouterCallBack routerCallBack = mDefaultRouterCallBack;
+        IRouterCallBack routerCallBack = mDefaultRouterCallBack;
         try {
             if (intentWraper.mRouterCallBack != null) {
                 routerCallBack = intentWraper.mRouterCallBack;
@@ -91,6 +98,22 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
             //need to redirect
 
+            List<IInterceptor> interceptors = new ArrayList<>();
+            if (mDefaultIntercept != null) {
+                interceptors.add(mDefaultIntercept);
+            }
+            if (intentWraper.mInterceptors != null && !intentWraper.mInterceptors.isEmpty()) {
+                interceptors.addAll(intentWraper.mInterceptors);
+            }
+
+            for (IInterceptor interceptor : interceptors) {
+                if (interceptor.intercept()) {
+                    interceptor.onIntercepted();
+                    throw new RuntimeException("Original url is intercepted in EasyRouter");
+                }
+            }
+
+            // pass the original url
             intentWraper.withString(EasyRouterConstant.ORIGINALURL, intentWraper.mUrl);
 
             intentWraper.mUrl = encodeUrl(intentWraper.mUrl);

@@ -6,7 +6,7 @@ import com.android.router.util.LogUtil;
  * Created by liuzhao on 2017/9/17.
  */
 
-public class DefaultRouterCallBack implements RouterCallBack {
+public class DefaultRouterCallBack implements IRouterCallBack {
     @Override
     public void onFound() {
         LogUtil.i("onFound");

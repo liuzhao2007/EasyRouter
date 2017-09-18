@@ -1,8 +1,8 @@
-package com.android.router.idispatcher;
+package com.android.router.dispatcher.idispatcher;
 
 import android.app.Activity;
 
-import com.android.router.callback.RouterCallBack;
+import com.android.router.callback.IRouterCallBack;
 
 /**
  * Created by liuzhao on 16/12/10.
@@ -13,6 +13,6 @@ public interface IActivityDispatcher {
 
     boolean open(Activity activity, String url);
 
-    boolean open(Activity activity, String url, RouterCallBack routerCallBack);
+    boolean open(Activity activity, String url, IRouterCallBack routerCallBack);
 
 }

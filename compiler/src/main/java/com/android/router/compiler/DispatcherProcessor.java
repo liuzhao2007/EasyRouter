@@ -111,7 +111,7 @@ public class DispatcherProcessor extends AbstractProcessor {
         MethodSpec.Builder initActivityDispatcherMethod = MethodSpec.methodBuilder("initActivityDispatcher")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
         for (String module : moduleNames) {
-            initActivityDispatcherMethod.addStatement("com.android.router.dispatcherimpl.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
+            initActivityDispatcherMethod.addStatement("com.android.router.dispatcher.dispatcherimpl.ActivityDispatcher.getActivityDispatcher().initActivityMaps(new " +
                     CompilerConstant.AutoCreateActivityMapPrefix + module + "())");
         }
 
@@ -166,12 +166,12 @@ public class DispatcherProcessor extends AbstractProcessor {
         MethodSpec.Builder initMethod = MethodSpec.methodBuilder("initModuleService")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
         for (Element element : moduleServiceElements) {
-            initMethod.addStatement("com.android.router.dispatcherimpl.moduleinteract.ModuleServiceManager.register(com.android.router.dispatcherimpl.moduleinteract.BaseModuleService.$T.class, new $T()) ",
+            initMethod.addStatement("com.android.router.dispatcher.dispatcherimpl.moduleinteract.ModuleServiceManager.register(com.android.router.dispatcher.dispatcherimpl.moduleinteract.BaseModuleService.$T.class, new $T()) ",
                     ClassName.get((TypeElement) element), ClassName.get((TypeElement) element));
         }
 
 
-        TypeElement routerInitializerType = elementUtils.getTypeElement("com.android.router.idispatcher.IActivityInitMap");
+        TypeElement routerInitializerType = elementUtils.getTypeElement("com.android.router.dispatcher.idispatcher.IActivityInitMap");
         return TypeSpec.classBuilder(com.android.router.compiler.CompilerConstant.AutoCreateActivityMapPrefix + moduleName)
                 .addSuperinterface(ClassName.get(routerInitializerType))
                 .addModifiers(Modifier.PUBLIC)

@@ -1,4 +1,4 @@
-package com.android.router.idispatcher;
+package com.android.router.dispatcher.idispatcher;
 
 import android.app.Activity;
 
