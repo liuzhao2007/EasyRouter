@@ -14,7 +14,7 @@ import com.easyrouter.service.BaseModuleService;
 /**
  * Created by liuzhao on 2017/9/13.
  */
-@DisPatcher("easyrouter://main")
+@DisPatcher({"easyrouter://main", "easyrouter://maintwo"})
 public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override

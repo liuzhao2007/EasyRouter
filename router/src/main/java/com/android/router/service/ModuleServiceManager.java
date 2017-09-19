@@ -1,4 +1,4 @@
-package com.android.router.dispatcher.dispatcherimpl.moduleinteract;
+package com.android.router.service;
 
 import java.util.HashMap;
 import java.util.Map;

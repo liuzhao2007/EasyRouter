@@ -1,6 +1,6 @@
 package com.easyrouter.service;
 
-import com.android.router.dispatcher.dispatcherimpl.moduleinteract.IBaseModuleService;
+import com.android.router.service.IBaseModuleService;
 
 /**
  * Created by liuzhao on 2017/9/19.
