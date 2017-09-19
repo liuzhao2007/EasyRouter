@@ -1,9 +1,10 @@
-package com.android.router.dispatcher.dispatcherimpl;
+package com.android.router;
 
 import android.app.Activity;
 import android.app.Application;
 
 import com.android.router.callback.IRouterCallBack;
+import com.android.router.dispatcher.dispatcherimpl.ActivityDispatcher;
 import com.android.router.dispatcher.dispatcherimpl.model.IntentWraper;
 import com.android.router.service.IBaseModuleService;
 import com.android.router.service.ModuleServiceManager;

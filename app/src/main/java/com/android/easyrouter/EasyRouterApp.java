@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.android.router.annotation.DispatcherModules;
 import com.android.router.callback.IRouterCallBack;
-import com.android.router.dispatcher.dispatcherimpl.EasyRouter;
+import com.android.router.EasyRouter;
 import com.android.router.util.LogUtil;
 
 /**

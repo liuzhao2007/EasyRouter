@@ -1,10 +1,12 @@
 package com.android.router.dispatcher.dispatcherimpl;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.android.router.EasyRouter;
 import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.callback.IRouterCallBack;
 import com.android.router.dispatcher.dispatcherimpl.model.DisPatcherInfo;
@@ -28,7 +30,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
     private static ActivityDispatcher activityDispatcher;
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
-    public HashMap<String, Class<? extends Activity>> activityMaps = new HashMap<String, Class<? extends Activity>>();
+    public HashMap<String, Class> activityMaps = new HashMap<String, Class>();
     private static IRouterCallBack mDefaultRouterCallBack;
     private static IInterceptor mDefaultIntercept;
 
@@ -79,14 +81,19 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
     @Override
     public boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
-        return realOpen(activity, new IntentWraper(url).withRouterCallBack(routerCallBack));
+        return realOpen(activity, new IntentWraper(url).withRouterCallBack(routerCallBack)) != null ? true : false;
     }
 
     public boolean open(Activity activity, IntentWraper intentWraper) {
-        return realOpen(activity, intentWraper);
+        return realOpen(activity, intentWraper) != null ? true : false;
     }
 
-    private boolean realOpen(Activity activity, IntentWraper intentWraper) {
+    public Object open(IntentWraper intentWraper) {
+        return realOpen(null, intentWraper);
+    }
+
+    private Object realOpen(Activity activity, IntentWraper intentWraper) {
+        Object object = null;
         IRouterCallBack routerCallBack = mDefaultRouterCallBack;
         try {
             if (intentWraper.mRouterCallBack != null) {
@@ -127,32 +134,47 @@ public class ActivityDispatcher implements IActivityDispatcher {
             if (routerCallBack != null) {
                 routerCallBack.onFound();
             }
-            Intent intent = new Intent(activity == null ? EasyRouter.mApplication : activity, disPatcherInfo.targetClass);
-            intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
-            intent.putExtras(intentWraper.mBundle);
-            if (intentWraper.mIntentFlag != DEFAULTVALUE) {
-                intent.addFlags(intentWraper.mIntentFlag);
-            }
-            if (activity == null) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                EasyRouter.mApplication.startActivity(intent);
-            } else {
-                activity.startActivityForResult(intent, intentWraper.mRequestCode);
-                if (activity != null && intentWraper.mInAnimation != DEFAULTVALUE && intentWraper.mOutAnimation != DEFAULTVALUE) {
-                    activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
+
+
+            if (intentWraper.openType != EasyRouterConstant.IntentWraperType_Fragment) {
+                Intent intent = new Intent(activity == null ? EasyRouter.mApplication : activity, disPatcherInfo.targetClass);
+                intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
+                intent.putExtras(intentWraper.mBundle);
+                if (intentWraper.mIntentFlag != DEFAULTVALUE) {
+                    intent.addFlags(intentWraper.mIntentFlag);
                 }
+                if (activity == null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    EasyRouter.mApplication.startActivity(intent);
+                } else {
+                    activity.startActivityForResult(intent, intentWraper.mRequestCode);
+                    if (activity != null && intentWraper.mInAnimation != DEFAULTVALUE && intentWraper.mOutAnimation != DEFAULTVALUE) {
+                        activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
+                    }
+                }
+                object = intentWraper;
+            } else {
+                Class fragmentClass = disPatcherInfo.targetClass;
+                Object fragmentInstance = fragmentClass.getConstructor().newInstance();
+                if (fragmentInstance instanceof Fragment) {
+                    ((Fragment) fragmentInstance).setArguments(intentWraper.mBundle);
+                } else if (fragmentInstance instanceof android.support.v4.app.Fragment) {
+                    ((android.support.v4.app.Fragment) fragmentInstance).setArguments(intentWraper.mBundle);
+                }
+                object = fragmentInstance;
             }
+
             if (routerCallBack != null) {
                 routerCallBack.onOpenSuccess();
             }
+            return object;
         } catch (Exception e) {
             if (routerCallBack != null) {
                 routerCallBack.onOpenFailed();
             }
             LogUtil.e(e);
-            return false;
+            return null;
         }
-        return true;
     }
 
     //    ActivityDispatcher.registerDis("chinahr://customer/second/i:tab/b:flag", SecondActivity.class);

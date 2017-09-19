@@ -3,15 +3,21 @@ package com.android.router.dispatcher.dispatcherimpl.model;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 
 import com.android.router.callback.IRouterCallBack;
 import com.android.router.dispatcher.dispatcherimpl.ActivityDispatcher;
 import com.android.router.intercept.IInterceptor;
+import com.android.router.util.EasyRouterConstant;
+import com.android.router.util.LogUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+
 
 /**
  * Created by liuzhao on 2017/7/27.
@@ -25,8 +31,8 @@ public class IntentWraper {
     public int mIntentFlag = -1;
     public int mRequestCode = -1;
     public IRouterCallBack mRouterCallBack;
-
     public List<IInterceptor> mInterceptors = new ArrayList<>();
+    public int openType;// type for url , Activity or Fragment
 
     public IntentWraper(String string) {
         mUrl = string;
@@ -44,6 +50,21 @@ public class IntentWraper {
     public boolean open(Activity activity, int requestCode) {
         mRequestCode = requestCode;
         return ActivityDispatcher.getActivityDispatcher().open(activity, this);
+    }
+
+    public <T> T getFragment(Class<T> tClass) {
+        if (tClass == null || !TextUtils.equals(tClass.getSimpleName(), "Fragment")) {
+            LogUtil.e(new RuntimeException("getFragment mothod params must be Fragment or support Fragment type"));
+            return null;
+        }
+        openType = EasyRouterConstant.IntentWraperType_Fragment;
+        Object object = ActivityDispatcher.getActivityDispatcher().open(this);
+        try {
+            return (T) object;
+        } catch (ClassCastException e) {
+            LogUtil.e(e);
+            return null;
+        }
     }
 
     public IntentWraper addInterceptor(IInterceptor interceptor) {

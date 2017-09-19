@@ -143,7 +143,7 @@ public class DispatcherProcessor extends AbstractProcessor {
 
         ParameterizedTypeName mapTypeName = ParameterizedTypeName
                 .get(ClassName.get(HashMap.class), ClassName.get(String.class),
-                        ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(ClassName.get(activityType))));
+                        ClassName.get(Class.class)) ;
         ParameterSpec mapParameterSpec = ParameterSpec.builder(mapTypeName, "activityMap")
                 .build();
         MethodSpec.Builder routerInitBuilder = MethodSpec.methodBuilder("initActivityMap")
@@ -166,7 +166,7 @@ public class DispatcherProcessor extends AbstractProcessor {
         MethodSpec.Builder initMethod = MethodSpec.methodBuilder("initModuleService")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
         for (Element element : moduleServiceElements) {
-            initMethod.addStatement("com.android.router.dispatcher.dispatcherimpl.moduleinteract.ModuleServiceManager.register(com.easyrouter.service.BaseModuleService.$T.class, new $T()) ",
+            initMethod.addStatement("com.android.router.service.ModuleServiceManager.register(com.easyrouter.service.BaseModuleService.$T.class, new $T()) ",
                     ClassName.get((TypeElement) element), ClassName.get((TypeElement) element));
         }
 

@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.android.router.annotation.DisPatcher;
 import com.android.router.callback.DefaultRouterCallBack;
-import com.android.router.dispatcher.dispatcherimpl.EasyRouter;
+import com.android.router.EasyRouter;
 import com.android.router.intercept.IInterceptor;
 import com.android.router.util.LogUtil;
 import com.easyrouter.service.BaseModuleService;
