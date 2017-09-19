@@ -1,1 +1,1 @@
-include ':app', ':router', ':annotation', ':compiler', ':moduleinteract'
+include ':app', ':router', ':annotation', ':compiler', ':moduleinteract', ':modulelib'

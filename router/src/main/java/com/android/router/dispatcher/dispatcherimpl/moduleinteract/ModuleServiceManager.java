@@ -10,16 +10,16 @@ import java.util.Map;
 public class ModuleServiceManager {
 
 
-    private static Map<Class<? extends BaseModuleService>, BaseModuleService> moduleInteracts = new HashMap<Class<? extends BaseModuleService>, BaseModuleService>();
+    private static Map<Class<? extends IBaseModuleService>, IBaseModuleService> moduleInteracts = new HashMap<Class<? extends IBaseModuleService>, IBaseModuleService>();
 
-    public static <T extends BaseModuleService> T getModuleService(Class<T> tClass) {
+    public static <T extends IBaseModuleService> T getModuleService(Class<T> tClass) {
         if (moduleInteracts.containsKey(tClass)) {
             return (T) moduleInteracts.get(tClass);
         }
         return null;
     }
 
-    public static void register(Class<? extends BaseModuleService> bClass, BaseModuleService baseInteract) {
+    public static void register(Class<? extends IBaseModuleService> bClass, IBaseModuleService baseInteract) {
         moduleInteracts.put(bClass, baseInteract);
     }
 

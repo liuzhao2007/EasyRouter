@@ -38,4 +38,6 @@ dependencies {
     compile project(':router')
     compile project(':annotation')
     annotationProcessor project(':compiler')
+    compile project(':modulelib')
+    compile project(':moduleinteract')
 }

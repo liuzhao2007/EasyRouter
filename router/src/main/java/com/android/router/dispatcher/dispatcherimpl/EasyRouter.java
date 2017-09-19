@@ -5,6 +5,8 @@ import android.app.Application;
 
 import com.android.router.callback.IRouterCallBack;
 import com.android.router.dispatcher.dispatcherimpl.model.IntentWraper;
+import com.android.router.dispatcher.dispatcherimpl.moduleinteract.IBaseModuleService;
+import com.android.router.dispatcher.dispatcherimpl.moduleinteract.ModuleServiceManager;
 import com.android.router.util.LogUtil;
 
 /**
@@ -73,6 +75,12 @@ public class EasyRouter {
         }
         return ActivityDispatcher.getActivityDispatcher().open(activity, url, routerCallBack);
     }
+
+    // api for service
+    public static <T extends IBaseModuleService> T getModuleService(Class<T> tClass) {
+        return ModuleServiceManager.getModuleService(tClass);
+    }
+
 
     public EasyRouter setDebug(boolean isDebug) {
         LogUtil.setDebug(isDebug);

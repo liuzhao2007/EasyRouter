@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/compiler" />
             <option value="$PROJECT_DIR$/moduleinteract" />
+            <option value="$PROJECT_DIR$/modulelib" />
             <option value="$PROJECT_DIR$/router" />
           </set>
         </option>

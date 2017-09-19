@@ -10,7 +10,7 @@ import com.android.router.util.LogUtil;
 /**
  * Created by liuzhao on 2017/9/16.
  */
-@DispatcherModules("app")
+@DispatcherModules({"app","moduleinteract"})
 public class EasyRouterApp extends Application {
     @Override
     public void onCreate() {

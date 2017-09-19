@@ -8,8 +8,10 @@ import android.view.View;
 import com.android.router.annotation.DisPatcher;
 import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.dispatcher.dispatcherimpl.EasyRouter;
+import com.android.router.dispatcher.dispatcherimpl.moduleinteract.ModuleServiceManager;
 import com.android.router.intercept.IInterceptor;
 import com.android.router.util.LogUtil;
+import com.easyrouter.service.BaseModuleService;
 
 /**
  * Created by liuzhao on 2017/9/13.
@@ -29,19 +31,21 @@ public class MainActivity extends Activity {
 
 
                 // Example for intercept
-                EasyRouter.with("easyrouter://routertest").addInterceptor(new IInterceptor() {
-                    @Override
-                    public boolean intercept() {
-                        LogUtil.i("if intercept");
-                        return true;
-                    }
+//                EasyRouter.with("easyrouter://routertest").addInterceptor(new IInterceptor() {
+//                    @Override
+//                    public boolean intercept() {
+//                        LogUtil.i("if intercept");
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public void onIntercepted() {
+//                        LogUtil.i("onIntercepted");
+//                    }
+//                }).open();
 
-                    @Override
-                    public void onIntercepted() {
-                        LogUtil.i("onIntercepted");
-                    }
-                }).open();
-
+                // Example for service
+                EasyRouter.getModuleService(BaseModuleService.ModuleInteractService.class).runModuleInteract();
 
             }
         });
