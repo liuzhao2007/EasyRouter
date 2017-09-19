@@ -5,13 +5,12 @@ package com.android.router.dispatcher.dispatcherimpl.moduleinteract;
  */
 public interface BaseModuleService {
 
-    public interface UserModuleService extends BaseModuleService {
-        void getUserName();
+    public interface ModuleInteractService extends BaseModuleService {
+        void runModuleInteract();
     }
 
     public interface AppModuleService extends BaseModuleService {
-        void switchRole();
+        void runAppModule();
     }
-
 
 }

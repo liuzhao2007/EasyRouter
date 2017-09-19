@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/annotation" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/compiler" />
+            <option value="$PROJECT_DIR$/moduleinteract" />
             <option value="$PROJECT_DIR$/router" />
           </set>
         </option>
