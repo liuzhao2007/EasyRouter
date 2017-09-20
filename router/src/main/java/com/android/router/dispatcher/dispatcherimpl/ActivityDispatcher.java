@@ -33,7 +33,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
     public HashMap<String, Class> activityMaps = new HashMap<String, Class>();
     private static IRouterCallBack mDefaultRouterCallBack;
     private static IInterceptor mDefaultIntercept;
-
+    public static List<Object> mInterceptors = new ArrayList<Object>();
 
     private static final String PARAM_URL = "url";//获取需要编码的url
     private static final String CHARSET = "UTF-8";//编码的字符集
@@ -63,6 +63,10 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
     public void initActivityMaps(IActivityInitMap activityInitMap) {
         activityInitMap.initActivityMap(activityMaps);
+    }
+
+    public void initInterceptors(List<IInterceptor> interceptors) {
+        mInterceptors.addAll(interceptors);
     }
 
     public IntentWraper withUrl(String string) {
@@ -105,7 +109,14 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
             //need to redirect
 
+            // has to Force conversion now the compiler can't get Model
             List<IInterceptor> interceptors = new ArrayList<>();
+            for (Object mObject : mInterceptors) {
+                if (mObject != null && mObject instanceof IInterceptor) {
+                    interceptors.add((IInterceptor) mObject);
+                }
+            }
+
             if (mDefaultIntercept != null) {
                 interceptors.add(mDefaultIntercept);
             }
@@ -135,8 +146,8 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 routerCallBack.onFound();
             }
 
-
             if (intentWraper.openType != EasyRouterConstant.IntentWraperType_Fragment) {
+                // for Activity
                 Intent intent = new Intent(activity == null ? EasyRouter.mApplication : activity, disPatcherInfo.targetClass);
                 intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
                 intent.putExtras(intentWraper.mBundle);
@@ -154,6 +165,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
                 object = intentWraper;
             } else {
+                // for Fragment
                 Class fragmentClass = disPatcherInfo.targetClass;
                 Object fragmentInstance = fragmentClass.getConstructor().newInstance();
                 if (fragmentInstance instanceof Fragment) {

@@ -40,7 +40,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     @Override
                     public boolean intercept() {
                         LogUtil.i("check if intercept");
-                        return true;
+                        return false;
                     }
 
                     @Override

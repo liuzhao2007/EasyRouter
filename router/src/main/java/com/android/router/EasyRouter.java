@@ -8,7 +8,13 @@ import com.android.router.dispatcher.dispatcherimpl.ActivityDispatcher;
 import com.android.router.dispatcher.dispatcherimpl.model.IntentWraper;
 import com.android.router.service.IBaseModuleService;
 import com.android.router.service.ModuleServiceManager;
+import com.android.router.util.ClassUtils;
 import com.android.router.util.LogUtil;
+
+import java.util.List;
+import java.util.Set;
+
+import static com.android.router.util.ClassUtils.getFileNameByPackageName;
 
 /**
  * Created by liuzhao on 2017/9/12.
@@ -40,6 +46,16 @@ public class EasyRouter {
                         if (mEasyRouter == null) {
                             mEasyRouter = new EasyRouter();
                         }
+                    }
+                }
+                Set<String> sets = ClassUtils.getFileNameByPackageName(mApplication, "com.android.easyrouter.interceptor");
+
+                for (String string : sets) {
+                    LogUtil.i(string);
+                    Class moduleInterceptor = Class.forName(string);
+                    if (moduleInterceptor != null) {
+                        List list = (List)moduleInterceptor.getMethod("initModuleInterceptor").invoke(null);
+                        ActivityDispatcher.mInterceptors.addAll(list);
                     }
                 }
                 isInited = true;

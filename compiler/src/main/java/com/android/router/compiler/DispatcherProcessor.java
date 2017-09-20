@@ -88,7 +88,6 @@ public class DispatcherProcessor extends AbstractProcessor {
         }
         try {
             TypeSpec type = getRouterTableInitializer(elementDispatchers, elementModuleServices);
-            TypeSpec type_ModuleService = null;
             if (type != null) {
                 builder(com.android.router.compiler.CompilerConstant.AutoCreateDispatcherPackage, type).build().writeTo(mFiler);
             }
@@ -136,11 +135,11 @@ public class DispatcherProcessor extends AbstractProcessor {
 
 
     private TypeSpec getRouterTableInitializer(Set<? extends Element> elements, Set<? extends Element> moduleServiceElements) throws ClassNotFoundException {
+
+//        error("执行！"+moduleName);
         if (elements == null || elements.size() == 0) {
             return null;
         }
-        TypeElement activityType = elementUtils.getTypeElement("android.app.Activity");
-
         ParameterizedTypeName mapTypeName = ParameterizedTypeName
                 .get(ClassName.get(HashMap.class), ClassName.get(String.class),
                         ClassName.get(Class.class)) ;
