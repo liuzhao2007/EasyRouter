@@ -1,12 +1,14 @@
 package com.android.easyrouter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.android.router.annotation.DisPatcher;
 import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.EasyRouter;
+import com.android.router.callback.IRouterCallBack;
 import com.android.router.intercept.IInterceptor;
 import com.android.router.util.LogUtil;
 import com.easyrouter.service.BaseModuleService;
@@ -32,6 +34,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.bt_normaljump:
                 // Example for normal jump
                 EasyRouter.open("easyrouter://routertest", new DefaultRouterCallBack());
+
+
+
                 break;
 
             case R.id.bt_jumpwithinteractor:
@@ -56,4 +61,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
+
 }
