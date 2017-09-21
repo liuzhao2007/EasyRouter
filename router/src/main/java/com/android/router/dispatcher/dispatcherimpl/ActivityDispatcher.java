@@ -32,7 +32,6 @@ public class ActivityDispatcher implements IActivityDispatcher {
     private int DEFAULTVALUE = -1;
     public HashMap<String, Class> activityMaps = new HashMap<String, Class>();
     private static IRouterCallBack mDefaultRouterCallBack;
-    private static IInterceptor mDefaultIntercept;
     public static List<Object> mInterceptors = new ArrayList<Object>();
 
     private static final String PARAM_URL = "url";//获取需要编码的url
@@ -51,10 +50,6 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
         }
         return activityDispatcher;
-    }
-
-    public void setRouterIntercept(IInterceptor interceptor) {
-        mDefaultIntercept = interceptor;
     }
 
     public void setDefaultRouterCallBack(IRouterCallBack defaultRouterCallBack) {
@@ -117,15 +112,12 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
             }
 
-            if (mDefaultIntercept != null) {
-                interceptors.add(mDefaultIntercept);
-            }
             if (intentWraper.mInterceptors != null && !intentWraper.mInterceptors.isEmpty()) {
                 interceptors.addAll(intentWraper.mInterceptors);
             }
 
             for (IInterceptor interceptor : interceptors) {
-                if (interceptor.intercept()) {
+                if (interceptor != null && interceptor.intercept()) {
                     interceptor.onIntercepted();
                     throw new RuntimeException("Original url is intercepted in EasyRouter");
                 }

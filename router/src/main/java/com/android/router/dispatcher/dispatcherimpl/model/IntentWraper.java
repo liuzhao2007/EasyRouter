@@ -16,9 +16,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-
-
 /**
  * Created by liuzhao on 2017/7/27.
  */
