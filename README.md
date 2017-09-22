@@ -72,6 +72,13 @@
 ```
 
 ### 3、添加注解
+- 在app里任意一个类中添加注解@DispatcherModules，里面写上所有使用此框架的Module的name；
+
+```
+	例如：@DispatcherModules({"app","moduleinteract"})；
+```
+
+- 在任意需要路由打开的Activity加上注解@DisPatcher，里面写上其对应的url；
 
 ```
     @DisPatcher({"easyrouter://main", "easyrouter://maintwo"})

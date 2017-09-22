@@ -13,7 +13,7 @@ public class RouterTestInterceptor implements IInterceptor {
     @Override
     public boolean intercept() {
         LogUtil.i("intercept by me");
-        return true;
+        return false;
     }
 
     @Override
