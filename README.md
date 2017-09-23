@@ -22,7 +22,7 @@
 # 三、集成使用
 ### 1. 添加依赖与配置
 ```
-	android {
+    android {
 	    defaultConfig {
     		javaCompileOptions {
     		    annotationProcessorOptions {
