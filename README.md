@@ -75,7 +75,7 @@
 - 在app里任意一个类中添加注解@DispatcherModules，里面写上所有使用此框架的Module的name；
 
 ```
-	例如：@DispatcherModules({"app","moduleinteract"})；
+例如：@DispatcherModules({"app","moduleinteract"})；
 ```
 
 - 在任意需要路由打开的Activity加上注解@DisPatcher，里面写上其对应的url；
@@ -103,6 +103,7 @@
                         .withTransition(0,0)// 设置动画；
                         .open(Activity,requestCode);// 设置RequestCode
 ```
+
 - 通过url传参；
     - 非必须参数；
 ```
@@ -110,6 +111,7 @@
     这样传递了两个参数：name与sex；在目标Activity中可以通过getIntent.getString("name")方式来获取；
 ```
     - 必须参数；
+
 ```
     注解声明：
     @DisPatcher({"easyrouter://main/i:tab"}) // 注解声明需要一个必备参数tab，并且声明其类型为int；
@@ -144,6 +146,7 @@
 ### 3、拦截器
 - 实现IInterceptor接口；
 - 打上注解@Interceptor；
+
 ```
     @Interceptor
     public class RouterTestInterceptor implements IInterceptor{
@@ -159,6 +162,7 @@
         }
     }
 ```
+
 **备注：在intercept方法中进行拦截与否的判断，例如登录态、重定向等；**
 
 ### 4、过程监听
@@ -184,7 +188,8 @@
         }
     });
 
-备注：可以对每一次路由做监听，也可以设置全局默认的监听；
+**备注：可以对每一次路由做监听，也可以设置全局默认的监听；**
+
 ```
 EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack();
 ```
