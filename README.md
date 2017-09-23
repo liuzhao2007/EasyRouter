@@ -22,7 +22,7 @@
 # 三、集成使用
 ### 1. 添加依赖与配置
 ```
-    android {
+android {
 	    defaultConfig {
     		javaCompileOptions {
     		    annotationProcessorOptions {
@@ -75,7 +75,7 @@
 - 在app里任意一个类中添加注解@DispatcherModules，里面写上所有使用此框架的Module的name；
 
 ```
-    例如：@DispatcherModules({"app","moduleinteract"})；
+例如：@DispatcherModules({"app","moduleinteract"})；
 ```
 
 - 在任意需要路由打开的Activity加上注解@DisPatcher，里面写上其对应的url；
@@ -104,13 +104,13 @@
                         .open(Activity,requestCode);// 设置RequestCode
 ```
 
-- 通过url传参；
-    - 非必须参数；
+- 通过url传参：非必须参数；
+
 ```
     EasyRouter.open("easyrouter://main?name=liuzhao&sex=man");
     这样传递了两个参数：name与sex；在目标Activity中可以通过getIntent.getString("name")方式来获取；
 ```
-    - 必须参数；
+- 通过url传参：必须参数；
 
 ```
     注解声明：
