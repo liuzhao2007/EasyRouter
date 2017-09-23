@@ -39,6 +39,7 @@ android {
     }
 ```
 在Project级别的build.gradle中添加：
+
 ```
     allprojects {
         repositories {
@@ -119,9 +120,7 @@ android {
     EasyRouter.open("easyrouter://main/3");
     这样传递了一个参数：tab；在目标Activity中可以通过getIntent.getInt("tab",0)方式来获取；
 ```
-**备注：必须参数与非必须参数可搭配使用，区别在于必须参数参与url匹配过程；**
-
-**备注：通过url传参与不通过url传参可搭配使用；**
+**备注：必须参数与非必须参数可搭配使用，区别在于必须参数参与url匹配过程；通过url传参与不通过url传参两种方式可搭配使用。**
 
 ### 2、Module间通信（方法调用）
 
@@ -166,49 +165,53 @@ android {
 **备注：在intercept方法中进行拦截与否的判断，例如登录态、重定向等；**
 
 ### 4、过程监听
-    EasyRouter.open("easyrouter://routertest",new IRouterCallBack(){
-        @Override
-        public void onFound() {
-            //匹配到
-        }
 
-        @Override
-        public void onLost() {
-            //匹配不到，可做降级；
-        }
-
-        @Override
-        public void onOpenSuccess() {
-            //界面打开成功
-        }
-
-        @Override
-        public void onOpenFailed() {
-            //界面打开失败，可做降级；
-        }
-    });
+	    EasyRouter.open("easyrouter://routertest",new IRouterCallBack(){
+	        @Override
+	        public void onFound() {
+	            //匹配到
+	        }
+	
+	        @Override
+	        public void onLost() {
+	            //匹配不到，可做降级；
+	        }
+	
+	        @Override
+	        public void onOpenSuccess() {
+	            //界面打开成功
+	        }
+	
+	        @Override
+	        public void onOpenFailed() {
+	            //界面打开失败，可做降级；
+	        }
+	    });
 
 **备注：可以对每一次路由做监听，也可以设置全局默认的监听；**
 
 ```
-EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack();
+	EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack();
 ```
 
 # 五、其它设置
 ### 1、打开Log；
+
 ```
-EasyRouter.init(EasyRouterApp.this).setDebug(true);
+	EasyRouter.init(EasyRouterApp.this).setDebug(true);
 ```
 
 ### 2、详细Api；
-- EasyRouter.open("url");
-- EasyRouter.open("url",IRouterCallBack);
-- EasyRouter.open(Activity,"url");
-- EasyRouter.open(Activity,"url",IRouterCallBack);
-- EasyRouter.with("url").with("","").open();  传递参数
-- EasyRouter.with("url").with("","").open(IRouterCallBack);  传递参数
-- EasyRouter.with("url").with("","").open(Activity,requestCode);  传递参数
 
+```
+	EasyRouter.open("url");
+	EasyRouter.open("url",IRouterCallBack);
+	EasyRouter.open(Activity,"url");
+	EasyRouter.open(Activity,"url",IRouterCallBack);
+	EasyRouter.with("url").with("","").open();  传递参数
+	EasyRouter.with("url").with("","").open(IRouterCallBack);  传递参数
+	EasyRouter.with("url").with("","").open(Activity,requestCode);  传递参数
+```
 
 
 
