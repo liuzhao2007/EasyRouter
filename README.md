@@ -166,7 +166,7 @@ android {
 
 ### 4、过程监听
 
-	    EasyRouter.open("easyrouter://routertest",new IRouterCallBack(){
+	  	EasyRouter.open("easyrouter://routertest",new IRouterCallBack(){
 	        @Override
 	        public void onFound() {
 	            //匹配到
@@ -191,26 +191,26 @@ android {
 **备注：可以对每一次路由做监听，也可以设置全局默认的监听；**
 
 ```
-	EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack();
+EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack();
 ```
 
 # 五、其它设置
 ### 1、打开Log；
 
 ```
-	EasyRouter.init(EasyRouterApp.this).setDebug(true);
+EasyRouter.init(EasyRouterApp.this).setDebug(true);
 ```
 
 ### 2、详细Api；
 
 ```
-	EasyRouter.open("url");
-	EasyRouter.open("url",IRouterCallBack);
-	EasyRouter.open(Activity,"url");
-	EasyRouter.open(Activity,"url",IRouterCallBack);
-	EasyRouter.with("url").with("","").open();  传递参数
-	EasyRouter.with("url").with("","").open(IRouterCallBack);  传递参数
-	EasyRouter.with("url").with("","").open(Activity,requestCode);  传递参数
+EasyRouter.open("url");
+EasyRouter.open("url",IRouterCallBack);
+EasyRouter.open(Activity,"url");
+EasyRouter.open(Activity,"url",IRouterCallBack);
+EasyRouter.with("url").with("","").open();  传递参数
+EasyRouter.with("url").with("","").open(IRouterCallBack);  传递参数
+EasyRouter.with("url").with("","").open(Activity,requestCode);  传递参数
 ```
 
 
