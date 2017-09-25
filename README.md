@@ -22,7 +22,7 @@
 # 三、集成使用
 ### 1. 添加依赖与配置
 ```
-android {
+    android {
 	    defaultConfig {
     		javaCompileOptions {
     		    annotationProcessorOptions {
@@ -126,8 +126,8 @@ android {
 
 ### 2、Module间通信（方法调用）
 
-配置稍微复杂，但使用极其简单；
-- 在项目的Library中创建继承IBaseModuleService的接口文件com.easyrouter.service.BaseModuleService；（包名及类名不可变）
+配置稍微复杂，但使用极其简单；可参考modulelib中的BaseModuleService。
+- 在项目的Library中创建继承IBaseModuleService的接口文件com.android.easyrouter.service.BaseModuleService；（包名、类名及继承关系不可变）
 - 各Module需要向外提供的方法在BaseModuleService中新建接口类并暴露接口；
 ```
     public interface ModuleInteractService extends BaseModuleService {
@@ -136,7 +136,7 @@ android {
 ```
 
 - 在Module中创建Module的接口实现类，类名需要和接口名一样；
-- 打上注解@ModuleService；
+- 打上注解@ModuleService、并编译；
 - 在别的Module中直接以方法调用；
 ```
     EasyRouter.getModuleService(BaseModuleService.ModuleInteractService.class).runModuleInteract(context);
@@ -215,18 +215,15 @@ android {
     EasyRouter.with("url").with("","").open(Activity,requestCode);  传递参数
 ```
 
+### 3、问题；
+如果有不生效的情况，例如：界面跳转、服务调用、编译失败等，可以尝试以下解决思路：
+- **确认配置是否完备，特备注意：在每个使用EasyRouter的build.gradle中添加javaCompileOptions（参见上面的具体配置）以及在app里任意一个类中添加注解@DispatcherModules，里面写上所有使用此框架的Module的name；**
+- **查看Log输出信息，Tag为easyrouter**；
 
+### 4、混淆；
+如果使用了Proguard，则需要添加以下混淆规则为；
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+    -keep public class com.android.easyrouter.**{*;}
+    -keep class * implements com.android.easyrouter.service.BaseModuleService{*;}
+```

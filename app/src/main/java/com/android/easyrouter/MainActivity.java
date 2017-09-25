@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.easyrouter.service.BaseModuleService;
 import com.android.router.EasyRouter;
 import com.android.router.annotation.DisPatcher;
 import com.android.router.callback.DefaultRouterCallBack;
 import com.android.router.intercept.IInterceptor;
 import com.android.router.util.LogUtil;
-import com.easyrouter.service.BaseModuleService;
 
 /**
  * Created by liuzhao on 2017/9/13.

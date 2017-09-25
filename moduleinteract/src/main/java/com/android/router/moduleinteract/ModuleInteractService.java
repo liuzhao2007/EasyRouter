@@ -3,9 +3,9 @@ package com.android.router.moduleinteract;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.android.easyrouter.service.BaseModuleService;
 import com.android.router.annotation.ModuleService;
 import com.android.router.util.LogUtil;
-import com.easyrouter.service.BaseModuleService;
 
 /**
  * Created by liuzhao on 2017/9/18.
