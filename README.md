@@ -117,6 +117,8 @@ android {
     注解声明：
     @DisPatcher({"easyrouter://main/i:tab"}) // 注解声明需要一个必备参数tab，并且声明其类型为int；
     public class MainActivity extends Activity 
+    
+    调用：
     EasyRouter.open("easyrouter://main/3");
     这样传递了一个参数：tab；在目标Activity中可以通过getIntent.getInt("tab",0)方式来获取；
 ```
@@ -129,7 +131,7 @@ android {
 - 各Module需要向外提供的方法在BaseModuleService中新建接口类并暴露接口；
 ```
     public interface ModuleInteractService extends BaseModuleService {
-        void runModuleInteract();
+        void runModuleInteract(Context context);
     }
 ```
 
@@ -137,7 +139,7 @@ android {
 - 打上注解@ModuleService；
 - 在别的Module中直接以方法调用；
 ```
-    EasyRouter.getModuleService(BaseModuleService.ModuleInteractService.class).runModuleInteract();
+    EasyRouter.getModuleService(BaseModuleService.ModuleInteractService.class).runModuleInteract(context);
 ```
 
 **备注：配置复杂带来的优势是方法的直接调用，无需强转也不限定调用方法的方法签名；**
