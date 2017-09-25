@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
         android:gravity="center"
         android:text="欢迎使用EasyRouter"
         android:textSize="20sp" />
@@ -33,5 +34,19 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="服务调用" />
+
+    <Button
+        android:id="@+id/bt_addfragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="添加Fragment" />
+
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
 
 </LinearLayout>

@@ -196,6 +196,13 @@
     EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack();
 ```
 
+### 5、获取Fragment；
+
+```
+    // 传入Fragment继承的类，android.app.Fragment或者android.support.v4.app.Fragment
+    Fragment fragment = EasyRouter.with("easyrouter://fragmenttest").getFragment(Fragment.class);
+```
+
 # 五、其它设置
 ### 1、打开Log；
 

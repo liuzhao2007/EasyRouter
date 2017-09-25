@@ -15,27 +15,15 @@ import com.android.easyrouter.util.EasyRouterConstant;
  * Created by liuzhao on 2017/9/16.
  */
 @DisPatcher("easyrouter://routertest")
-public class RouterTestActivity extends FragmentActivity implements View.OnClickListener {
+public class RouterTestActivity extends FragmentActivity {
     private TextView tv_routertest;
-    private FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.routertest);
         tv_routertest = (TextView) findViewById(R.id.tv_routertest);
-        tv_routertest.setText(getIntent().getStringExtra(EasyRouterConstant.ORIGINALURL));
-        frameLayout = (FrameLayout) findViewById(R.id.fl_container);
-        findViewById(R.id.bt_testfragment).setOnClickListener(this);
+        tv_routertest.setText("原始Url为：" + getIntent().getStringExtra(EasyRouterConstant.ORIGINALURL));
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_testfragment:
-                Fragment fragment = EasyRouter.with("easyrouter://fragmenttest").getFragment(Fragment.class);
-                RouterTestActivity.this.getSupportFragmentManager().beginTransaction().add(R.id.fl_container, fragment).commit();
-                break;
-        }
-    }
 }
