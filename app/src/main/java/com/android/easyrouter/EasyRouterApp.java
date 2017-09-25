@@ -33,7 +33,7 @@ public class EasyRouterApp extends Application {
 
             @Override
             public void onOpenFailed() {
-
+                LogUtil.i("default onOpenFailed");
             }
         });
 
