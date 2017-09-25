@@ -2,8 +2,6 @@ package com.android.easyrouter.service;
 
 import android.content.Context;
 
-import com.android.router.service.IBaseModuleService;
-
 /**
  * Created by liuzhao on 2017/9/19.
  */
