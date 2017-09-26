@@ -8,9 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColor="@android:color/black"
         android:gravity="center"
         android:text="欢迎使用EasyRouter"
+        android:textColor="@android:color/black"
         android:textSize="20sp" />
 
     <Button
@@ -40,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="添加Fragment" />
+        android:text="添加Fragment"
+        android:textAllCaps="false" />
 
 
     <FrameLayout

@@ -228,7 +228,7 @@
 - **查看Log输出信息，Tag为easyrouter**；
 
 ### 4、混淆；
-如果使用了Proguard，则需要添加以下混淆规则为；
+如果使用了Proguard，则需要添加以下混淆规则；
 
 ```
     -keep public class com.android.easyrouter.**{*;}
