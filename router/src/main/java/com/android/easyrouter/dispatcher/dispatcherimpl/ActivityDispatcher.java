@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.android.easyrouter.EasyRouter;
+import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.callback.DefaultRouterCallBack;
 import com.android.easyrouter.callback.IRouterCallBack;
 import com.android.easyrouter.dispatcher.dispatcherimpl.model.DisPatcherInfo;
@@ -140,7 +140,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
             if (intentWraper.openType != EasyRouterConstant.IntentWraperType_Fragment) {
                 // for Activity
-                Intent intent = new Intent(activity == null ? EasyRouter.mApplication : activity, disPatcherInfo.targetClass);
+                Intent intent = new Intent(activity == null ? EasyRouterConfig.mApplication : activity, disPatcherInfo.targetClass);
                 intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
                 intent.putExtras(intentWraper.mBundle);
                 if (intentWraper.mIntentFlag != DEFAULTVALUE) {
@@ -148,7 +148,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
                 if (activity == null) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    EasyRouter.mApplication.startActivity(intent);
+                    EasyRouterConfig.mApplication.startActivity(intent);
                 } else {
                     activity.startActivityForResult(intent, intentWraper.mRequestCode);
                     if (activity != null && intentWraper.mInAnimation != DEFAULTVALUE && intentWraper.mOutAnimation != DEFAULTVALUE) {

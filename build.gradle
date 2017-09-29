@@ -34,7 +34,7 @@ ext {
     userOrg = 'liuzhaowy2007'
     groupId = 'com.easyrouter'
     uploadName = 'EasyRouter'
-    publishVersion = '1.1.0'
+    publishVersion = '1.2.0'
     desc = '简单、稳定、高性能的组件化路由框架'
     website = 'https://github.com/liuzhao2007/EasyRouter'
     licences = ['Apache-2.0']
