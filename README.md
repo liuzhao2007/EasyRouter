@@ -53,23 +53,31 @@
 **EasyRouter.init().setScheme()必调，别的设置选调；**
 
 ```
-    EasyRouter.init(EasyRouterApp.this).setScheme("easyrouter").setDefaultRouterCallBack(new IRouterCallBack() {
-        @Override
-        public void onFound() {
-        }
+    EasyRouterConfig.getInstance()
+            .setDebug(true)
+            .setScheme("easyrouter")
+            .setDefaultRouterCallBack(new IRouterCallBack() {
+                @Override
+                public void onFound() {
+                    LogUtil.i("default onFound");
+                }
 
-        @Override
-        public void onLost() {
-        }
+                @Override
+                public void onLost() {
+                    LogUtil.i("default onLost");
+                }
 
-        @Override
-        public void onOpenSuccess() {
-        }
+                @Override
+                public void onOpenSuccess() {
+                    LogUtil.i("default onOpenSuccess");
+                }
 
-        @Override
-        public void onOpenFailed() {
-        }
-    });
+                @Override
+                public void onOpenFailed() {
+                    LogUtil.i("default onOpenFailed");
+                }
+            })
+            .init(EasyRouterApp.this);
 ```
 
 ### 3、添加注解
@@ -207,7 +215,7 @@
 ### 1、打开Log；
 
 ```
-    EasyRouter.init(EasyRouterApp.this).setDebug(true);
+    EasyRouterConfig.getInstance().setDebug(true)
 ```
 
 ### 2、详细Api；

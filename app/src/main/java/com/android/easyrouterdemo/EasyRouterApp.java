@@ -43,4 +43,5 @@ public class EasyRouterApp extends Application {
                 .init(EasyRouterApp.this);
 
     }
+
 }

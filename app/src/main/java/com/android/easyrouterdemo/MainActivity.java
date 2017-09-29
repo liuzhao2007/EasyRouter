@@ -26,6 +26,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.easyrouter_maintest);
+        findViewById(R.id.bt_useinfo).setOnClickListener(this);
         findViewById(R.id.bt_normaljump).setOnClickListener(this);
         findViewById(R.id.bt_jumpwithinteractor).setOnClickListener(this);
         findViewById(R.id.bt_callservice).setOnClickListener(this);
@@ -61,9 +62,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 // Example for service invoke
                 EasyRouter.getModuleService(BaseModuleService.ModuleInteractService.class).runModuleInteract(MainActivity.this);
                 break;
+
             case R.id.bt_addfragment:
                 Fragment fragment = EasyRouter.with("easyrouter://fragmenttest").getFragment(Fragment.class);
                 MainActivity.this.getSupportFragmentManager().beginTransaction().add(R.id.fl_container, fragment).commit();
+                break;
+
+            case R.id.bt_useinfo:
+                EasyRouter.open("easyrouter://routeruseinfo");
                 break;
         }
     }

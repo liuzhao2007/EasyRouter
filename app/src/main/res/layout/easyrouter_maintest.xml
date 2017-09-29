@@ -10,14 +10,23 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="欢迎使用EasyRouter"
+        android:textAllCaps="false"
         android:textColor="@android:color/black"
         android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/bt_useinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="EasyRouter介绍"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/bt_normaljump"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="普通跳转" />
 

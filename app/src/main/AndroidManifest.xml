@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.android.easyrouterdemo.RouterTestActivity"></activity>
+        <activity android:name="com.android.easyrouterdemo.RouterUseInfoActivity"></activity>
     </application>
 
 </manifest>
