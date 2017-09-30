@@ -3,6 +3,7 @@ package com.android.router.compiler;
 import com.android.easyrouter.annotation.DisPatcher;
 import com.android.easyrouter.annotation.DispatcherModules;
 import com.android.easyrouter.annotation.ModuleService;
+import com.android.easyrouter.compiler.exception.InvalidTargetException;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -67,6 +68,7 @@ public class DispatcherProcessor extends AbstractProcessor {
         Set<String> ret = new HashSet<>();
         ret.add(DisPatcher.class.getCanonicalName());
         ret.add(DispatcherModules.class.getCanonicalName());
+        ret.add(ModuleService.class.getCanonicalName());
         return ret;
     }
 
@@ -134,23 +136,21 @@ public class DispatcherProcessor extends AbstractProcessor {
 
 
     private TypeSpec getRouterTableInitializer(Set<? extends Element> elements, Set<? extends Element> moduleServiceElements) throws ClassNotFoundException {
-
-//        error("执行！"+moduleName);
         if (elements == null || elements.size() == 0) {
             return null;
         }
         ParameterizedTypeName mapTypeName = ParameterizedTypeName
                 .get(ClassName.get(HashMap.class), ClassName.get(String.class),
-                        ClassName.get(Class.class)) ;
+                        ClassName.get(Class.class));
         ParameterSpec mapParameterSpec = ParameterSpec.builder(mapTypeName, "activityMap")
                 .build();
         MethodSpec.Builder routerInitBuilder = MethodSpec.methodBuilder("initActivityMap")
-//                .addAnnotation(Override.class)
+                .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(mapParameterSpec);
         for (Element element : elements) {
             if (element.getKind() != ElementKind.CLASS) {
-//                throw new TargetErrorException();
+                throw new InvalidTargetException("DisPatcher must be used on class");
             }
             DisPatcher router = element.getAnnotation(DisPatcher.class);
             String[] routerUrls = router.value();
@@ -167,7 +167,6 @@ public class DispatcherProcessor extends AbstractProcessor {
             initMethod.addStatement("com.android.easyrouter.service.ModuleServiceManager.register(com.android.easyrouter.service.BaseModuleService.$T.class, new $T()) ",
                     ClassName.get((TypeElement) element), ClassName.get((TypeElement) element));
         }
-
 
         TypeElement routerInitializerType = elementUtils.getTypeElement("com.android.easyrouter.dispatcher.idispatcher.IActivityInitMap");
         return TypeSpec.classBuilder(com.android.easyrouter.compiler.CompilerConstant.AutoCreateActivityMapPrefix + moduleName)
