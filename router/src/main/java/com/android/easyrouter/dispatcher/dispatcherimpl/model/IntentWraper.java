@@ -1,6 +1,7 @@
 package com.android.easyrouter.dispatcher.dispatcherimpl.model;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -10,7 +11,7 @@ import com.android.easyrouter.callback.IRouterCallBack;
 import com.android.easyrouter.dispatcher.dispatcherimpl.ActivityDispatcher;
 import com.android.easyrouter.intercept.IInterceptor;
 import com.android.easyrouter.util.EasyRouterConstant;
-import com.android.easyrouter.util.LogUtil;
+import com.android.easyrouter.util.EasyRouterLogUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 
 public class IntentWraper {
+    public Intent mIntent;
     public Bundle mBundle;
     public String mUrl;
     public int mInAnimation = -1;
@@ -51,7 +53,7 @@ public class IntentWraper {
 
     public <T> T getFragment(Class<T> tClass) {
         if (tClass == null || !TextUtils.equals(tClass.getSimpleName(), "Fragment")) {
-            LogUtil.e(new RuntimeException("getFragment mothod params must be Fragment or support Fragment type"));
+            EasyRouterLogUtils.e(new RuntimeException("getFragment mothod params must be Fragment or support Fragment type"));
             return null;
         }
         openType = EasyRouterConstant.IntentWraperType_Fragment;
@@ -59,7 +61,7 @@ public class IntentWraper {
         try {
             return (T) object;
         } catch (ClassCastException e) {
-            LogUtil.e(e);
+            EasyRouterLogUtils.e(e);
             return null;
         }
     }

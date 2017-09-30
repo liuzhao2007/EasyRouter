@@ -2,7 +2,7 @@ package com.android.easyrouterdemo;
 
 import com.android.easyrouter.annotation.Interceptor;
 import com.android.easyrouter.intercept.IInterceptor;
-import com.android.easyrouter.util.LogUtil;
+import com.android.easyrouter.util.EasyRouterLogUtils;
 
 /**
  * Created by liuzhao on 2017/9/20.
@@ -12,7 +12,7 @@ public class RouterTestInterceptor implements IInterceptor {
 
     @Override
     public boolean intercept() {
-        LogUtil.i("intercept by me");
+        EasyRouterLogUtils.i("intercept by me");
         return false;
     }
 

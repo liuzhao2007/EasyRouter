@@ -17,12 +17,15 @@ import com.android.easyrouter.util.EasyRouterConstant;
 @DisPatcher("easyrouter://routertest")
 public class RouterTestActivity extends FragmentActivity {
     private TextView tv_routertest;
+    private TextView tv_params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.routertest);
+        tv_params = (TextView) findViewById(R.id.tv_params);
         tv_routertest = (TextView) findViewById(R.id.tv_routertest);
+        tv_params.setText("传递的参数为：姓名：" + getIntent().getStringExtra("name") + "，公司：" + getIntent().getStringExtra("company"));
         tv_routertest.setText("原始Url为：" + getIntent().getStringExtra(EasyRouterConstant.ORIGINALURL));
     }
 

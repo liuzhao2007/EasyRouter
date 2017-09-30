@@ -6,16 +6,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.callback.DefaultRouterCallBack;
 import com.android.easyrouter.callback.IRouterCallBack;
+import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.dispatcher.dispatcherimpl.model.DisPatcherInfo;
 import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWraper;
 import com.android.easyrouter.dispatcher.idispatcher.IActivityDispatcher;
 import com.android.easyrouter.dispatcher.idispatcher.IActivityInitMap;
 import com.android.easyrouter.intercept.IInterceptor;
 import com.android.easyrouter.util.EasyRouterConstant;
-import com.android.easyrouter.util.LogUtil;
+import com.android.easyrouter.util.EasyRouterLogUtils;
+import com.android.easyrouter.util.EasyRouterUtils;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
     private static ActivityDispatcher activityDispatcher;
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
+    public static List<String> pkNames = new ArrayList<String>();
     public HashMap<String, Class> activityMaps = new HashMap<String, Class>();
     private static IRouterCallBack mDefaultRouterCallBack;
     public static List<Object> mInterceptors = new ArrayList<Object>();
@@ -58,6 +60,13 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
     public void initActivityMaps(IActivityInitMap activityInitMap) {
         activityInitMap.initActivityMap(activityMaps);
+        String name = activityInitMap.getClass().getSimpleName();
+        if (!TextUtils.isEmpty(name) && name.contains("_")) {
+            String splits[] = name.split("_");
+            if (splits != null && splits.length > 1 && !pkNames.contains(splits[1])) {
+                pkNames.add(splits[1]);
+            }
+        }
     }
 
     public void initInterceptors(List<IInterceptor> interceptors) {
@@ -91,10 +100,11 @@ public class ActivityDispatcher implements IActivityDispatcher {
         return realOpen(null, intentWraper);
     }
 
-    private Object realOpen(Activity activity, IntentWraper intentWraper) {
+    private Object realOpen(final Activity activity, final IntentWraper intentWraper) {
         Object object = null;
         IRouterCallBack routerCallBack = mDefaultRouterCallBack;
         try {
+            // deal callBack
             if (intentWraper.mRouterCallBack != null) {
                 routerCallBack = intentWraper.mRouterCallBack;
             }
@@ -146,14 +156,27 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 if (intentWraper.mIntentFlag != DEFAULTVALUE) {
                     intent.addFlags(intentWraper.mIntentFlag);
                 }
+                intentWraper.mIntent = intent;
                 if (activity == null) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    EasyRouterConfig.mApplication.startActivity(intent);
+                    intentWraper.mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    // had better force to run in main thread
+                    EasyRouterUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            EasyRouterConfig.mApplication.startActivity(intentWraper.mIntent);
+                        }
+                    });
                 } else {
-                    activity.startActivityForResult(intent, intentWraper.mRequestCode);
-                    if (activity != null && intentWraper.mInAnimation != DEFAULTVALUE && intentWraper.mOutAnimation != DEFAULTVALUE) {
-                        activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
-                    }
+                    // had better force to run in main thread
+                    EasyRouterUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.startActivityForResult(intentWraper.mIntent, intentWraper.mRequestCode);
+                            if (activity != null && intentWraper.mInAnimation != DEFAULTVALUE && intentWraper.mOutAnimation != DEFAULTVALUE) {
+                                activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
+                            }
+                        }
+                    });
                 }
                 object = intentWraper;
             } else {
@@ -167,7 +190,6 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
                 object = fragmentInstance;
             }
-
             if (routerCallBack != null) {
                 routerCallBack.onOpenSuccess();
             }
@@ -176,13 +198,11 @@ public class ActivityDispatcher implements IActivityDispatcher {
             if (routerCallBack != null) {
                 routerCallBack.onOpenFailed();
             }
-            LogUtil.e(e);
+            EasyRouterLogUtils.e(e);
             return null;
         }
     }
 
-    //    ActivityDispatcher.registerDis("chinahr://customer/second/i:tab/b:flag", SecondActivity.class);
-    //     chinahr://customer/second/20/true
     private Intent setParams(Intent intent, String targetUrl, String matchUrl) {
         Uri targetUri = Uri.parse(targetUrl);
         List<String> targetSegments = targetUri.getPathSegments();
@@ -198,12 +218,12 @@ public class ActivityDispatcher implements IActivityDispatcher {
                     paramsType = "s";
                     paramsName = string.substring(1, string.length());
                 } else {
-                    paramsType = string.substring(0, 1);//参数类型；
-                    paramsName = string.substring(2, string.length());//参数名称；
+                    paramsType = string.substring(0, 1);//params type；
+                    paramsName = string.substring(2, string.length());//params name；
                 }
                 switch (paramsType) {
                     case "i":
-                        //说明是int类型；
+                        //mean int type；
                         try {
                             int intParamValue = Integer.parseInt(targetSegments.get(segments.indexOf(string)));
                             intent.putExtra(paramsName, intParamValue);
@@ -212,7 +232,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                         }
                         break;
                     case "f":
-                        //说明是float类型；
+                        //mean float type；
                         try {
                             float floatParamValue = Float.parseFloat(targetSegments.get(segments.indexOf(string)));
                             intent.putExtra(paramsName, floatParamValue);
@@ -221,7 +241,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                         }
                         break;
                     case "b":
-                        //说明是boolean类型；
+                        //mean boolean type；
                         try {
                             boolean booleanParamValue = Boolean.parseBoolean(targetSegments.get(segments.indexOf(string)));
                             intent.putExtra(paramsName, booleanParamValue);
@@ -230,7 +250,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                         }
                         break;
                     case "d":
-                        //说明是double类型；
+                        //mean double type；
                         try {
                             double doubleParamValue = Double.parseDouble(targetSegments.get(segments.indexOf(string)));
                             intent.putExtra(paramsName, doubleParamValue);
@@ -239,18 +259,16 @@ public class ActivityDispatcher implements IActivityDispatcher {
                         }
                         break;
                     case "s":
-                        //说明是string类型；
+                        //mean string type；
                         intent.putExtra(paramsName, targetSegments.get(segments.indexOf(string)));
                         break;
                 }
             }
         }
-
         Set<String> queryParameterNames = targetUri.getQueryParameterNames();
         for (String queryParameterName : queryParameterNames) {
             intent.putExtra(queryParameterName, targetUri.getQueryParameter(queryParameterName));
         }
-
         return intent;
     }
 

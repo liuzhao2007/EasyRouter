@@ -6,7 +6,7 @@ import android.util.Log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class LogUtil {
+public class EasyRouterLogUtils {
 
     private static String DEFAULT_TAG = "easyrouter";
     private static boolean debug = true;
@@ -117,6 +117,6 @@ public class LogUtil {
     }
 
     public static void setDebug(boolean debug) {
-        LogUtil.debug = debug;
+        EasyRouterLogUtils.debug = debug;
     }
 }

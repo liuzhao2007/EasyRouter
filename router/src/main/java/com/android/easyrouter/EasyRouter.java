@@ -8,7 +8,7 @@ import com.android.easyrouter.dispatcher.dispatcherimpl.ActivityDispatcher;
 import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWraper;
 import com.android.easyrouter.service.IBaseModuleService;
 import com.android.easyrouter.service.ModuleServiceManager;
-import com.android.easyrouter.util.LogUtil;
+import com.android.easyrouter.util.EasyRouterLogUtils;
 
 /**
  * Created by liuzhao on 2017/9/12.
@@ -35,7 +35,7 @@ public class EasyRouter {
 
     public static boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
         if (!EasyRouterConfig.isInited) {
-            LogUtil.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
+            EasyRouterLogUtils.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
             return false;
         }
         return ActivityDispatcher.getActivityDispatcher().open(activity, url, routerCallBack);
@@ -43,7 +43,7 @@ public class EasyRouter {
 
     public static IntentWraper with(String url) {
         if (!EasyRouterConfig.isInited) {
-            LogUtil.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
+            EasyRouterLogUtils.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
         }
         return ActivityDispatcher.getActivityDispatcher().withUrl(url);
     }

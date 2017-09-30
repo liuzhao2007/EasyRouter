@@ -4,11 +4,9 @@ import android.app.Application;
 
 import com.android.easyrouter.callback.IRouterCallBack;
 import com.android.easyrouter.dispatcher.dispatcherimpl.ActivityDispatcher;
-import com.android.easyrouter.util.ClassUtils;
-import com.android.easyrouter.util.LogUtil;
+import com.android.easyrouter.util.EasyRouterLogUtils;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by liuzhao on 2017/9/29.
@@ -41,10 +39,9 @@ public class EasyRouterConfig {
                 if (routerInit != null) {
                     routerInit.getMethod("init").invoke(null);
                 }
-                Set<String> sets = ClassUtils.getFileNameByPackageName(mApplication, "com.android.easyrouter.interceptor");
-                for (String string : sets) {
-                    LogUtil.i(string);
-                    Class moduleInterceptor = Class.forName(string);
+                for (String string : ActivityDispatcher.pkNames) {
+                    EasyRouterLogUtils.i(string);
+                    Class moduleInterceptor = Class.forName("com.android.easyrouter.interceptor.AutoCreateInterceptor_" + string);
                     if (moduleInterceptor != null) {
                         List list = (List) moduleInterceptor.getMethod("initModuleInterceptor").invoke(null);
                         ActivityDispatcher.mInterceptors.addAll(list);
@@ -52,14 +49,14 @@ public class EasyRouterConfig {
                 }
                 isInited = true;
             } catch (Exception e) {
-                LogUtil.e(e);
+                EasyRouterLogUtils.e(e);
             }
         }
     }
 
     public EasyRouterConfig setDebug(boolean isDebug) {
-        LogUtil.setDebug(isDebug);
-        LogUtil.i("EasyRouter debug open");
+        EasyRouterLogUtils.setDebug(isDebug);
+        EasyRouterLogUtils.i("EasyRouter debug open");
         return this;
     }
 
@@ -72,7 +69,7 @@ public class EasyRouterConfig {
         if (defaultRouterCallBack != null) {
             ActivityDispatcher.getActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
         }
-        LogUtil.i("EasyRouter setDefaultRouterCallBack");
+        EasyRouterLogUtils.i("EasyRouter setDefaultRouterCallBack");
         return this;
     }
 
