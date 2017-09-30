@@ -12,7 +12,7 @@
 7. 支持获取Fragment；
 8. 支持全局、局部过程监听：降级、打开后等；
 9. Api简单、实现高性能；
-
+![Gif功能说明](https://user-gold-cdn.xitu.io/2017/9/30/81b349d42ea6a20bf8a906a6ff4ca822)
 
 # 二、应用场景
 1. Module内、跨Module界面跳转，界面解耦；
