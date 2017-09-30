@@ -50,7 +50,7 @@
 ```
 ### 2、初始化
 
-**EasyRouter.init().setScheme()必调，别的设置选调；**
+**EasyRouterConfig.getInstance().setScheme()必调，别的设置选调；**
 
 ```
     EasyRouterConfig.getInstance()

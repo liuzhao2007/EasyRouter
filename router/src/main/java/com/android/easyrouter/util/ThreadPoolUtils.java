@@ -6,15 +6,19 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by liuzhao on 2017/9/20.
+ * <p>
+ * the thread count is copied from android/os/AsyncTask.java
  */
 
 public class ThreadPoolUtils {
-    private static int COREPOOLSIZE = 3;// 线程池中活跃的线程数
-    private static int MAXIMUMPOOLSIZE = 10;// 线程池中最大容量
-    private static int KEEPALIVETIME = 2;// 超出活跃线程数量的线程销毁前等待任务的时间；
+
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
+    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+    private static final int KEEP_ALIVE_SECONDS = 10;
     public static ThreadPoolExecutor executor = new ThreadPoolExecutor(
-            COREPOOLSIZE, MAXIMUMPOOLSIZE, KEEPALIVETIME, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>());// 使用线程池替代单纯 的Thread。
+            CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
 
     public static void execute(Runnable runnable) {
