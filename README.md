@@ -13,7 +13,7 @@
 8. 支持全局、局部过程监听：降级、打开后等；
 9. Api简单、实现高性能；
 
-![Image](https://user-gold-cdn.xitu.io/2017/9/30/81b349d42ea6a20bf8a906a6ff4ca822)
+![image](https://github.com/liuzhao2007/EasyRouter/blob/master/app/gif/EasyRouter.gif)
 
 # 二、应用场景
 1. Module内、跨Module界面跳转，界面解耦；
