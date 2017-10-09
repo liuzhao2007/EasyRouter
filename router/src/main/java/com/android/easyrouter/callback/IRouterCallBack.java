@@ -1,16 +1,22 @@
 package com.android.easyrouter.callback;
 
+import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWrapper;
+
 /**
  * Created by liuzhao on 2017/9/17.
  */
 
 public interface IRouterCallBack {
+    /**
+     * can get information needen from intentWrapper
+     *
+     * @param intentWrapper
+     */
+    void onFound(IntentWrapper intentWrapper);
 
-    void onFound();
+    void onLost(IntentWrapper intentWrapper);
 
-    void onLost();
+    void onOpenSuccess(IntentWrapper intentWrapper);
 
-    void onOpenSuccess();
-
-    void onOpenFailed();
+    void onOpenFailed(IntentWrapper intentWrapper, Throwable e);
 }

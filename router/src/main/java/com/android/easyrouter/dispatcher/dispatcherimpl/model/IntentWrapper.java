@@ -21,10 +21,11 @@ import java.util.List;
  * Created by liuzhao on 2017/7/27.
  */
 
-public class IntentWraper {
+public class IntentWrapper {
     public Intent mIntent;
     public Bundle mBundle;
     public String mUrl;
+    public String mOriginalUrl;// the variable won't be changed
     public int mInAnimation = -1;
     public int mOutAnimation = -1;
     public int mIntentFlag = -1;
@@ -33,8 +34,9 @@ public class IntentWraper {
     public List<IInterceptor> mInterceptors = new ArrayList<>();
     public int openType;// type for url , Activity or Fragment
 
-    public IntentWraper(String string) {
-        mUrl = string;
+    public IntentWrapper(String url) {
+        mUrl = url;
+        mOriginalUrl = url;
         mBundle = new Bundle();
     }
 
@@ -66,65 +68,65 @@ public class IntentWraper {
         }
     }
 
-    public IntentWraper addInterceptor(IInterceptor interceptor) {
+    public IntentWrapper addInterceptor(IInterceptor interceptor) {
         if (interceptor != null) {
             mInterceptors.add(interceptor);
         }
         return this;
     }
 
-    public IntentWraper withFlags(int flag) {
+    public IntentWrapper withFlags(int flag) {
         this.mIntentFlag = flag;
         return this;
     }
 
-    public IntentWraper withRequestCode(int requestCode) {
+    public IntentWrapper withRequestCode(int requestCode) {
         mRequestCode = requestCode;
         return this;
     }
 
-    public IntentWraper withRouterCallBack(IRouterCallBack routerCallBack) {
+    public IntentWrapper withRouterCallBack(IRouterCallBack routerCallBack) {
         mRouterCallBack = routerCallBack;
         return this;
     }
 
-    public IntentWraper withTransition(int inAnimation, int outAnimation) {
+    public IntentWrapper withTransition(int inAnimation, int outAnimation) {
         this.mInAnimation = inAnimation;
         this.mOutAnimation = outAnimation;
         return this;
     }
 
-    public IntentWraper withString(String key, String value) {
+    public IntentWrapper withString(String key, String value) {
         mBundle.putString(key, value);
         return this;
     }
 
-    public IntentWraper withInt(String key, int value) {
+    public IntentWrapper withInt(String key, int value) {
         mBundle.putInt(key, value);
         return this;
     }
 
-    public IntentWraper withDouble(String key, Double value) {
+    public IntentWrapper withDouble(String key, Double value) {
         mBundle.putDouble(key, value);
         return this;
     }
 
-    public IntentWraper withBoolean(String key, Boolean value) {
+    public IntentWrapper withBoolean(String key, Boolean value) {
         mBundle.putBoolean(key, value);
         return this;
     }
 
-    public IntentWraper withFloat(String key, Float value) {
+    public IntentWrapper withFloat(String key, Float value) {
         mBundle.putFloat(key, value);
         return this;
     }
 
-    public IntentWraper withSerializable(String key, Serializable value) {
+    public IntentWrapper withSerializable(String key, Serializable value) {
         mBundle.putSerializable(key, value);
         return this;
     }
 
-    public IntentWraper withParcelable(String key, Parcelable value) {
+    public IntentWrapper withParcelable(String key, Parcelable value) {
         mBundle.putParcelable(key, value);
         return this;
     }

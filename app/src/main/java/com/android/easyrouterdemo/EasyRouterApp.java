@@ -5,6 +5,7 @@ import android.app.Application;
 import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.annotation.DispatcherModules;
 import com.android.easyrouter.callback.IRouterCallBack;
+import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWrapper;
 import com.android.easyrouter.util.EasyRouterLogUtils;
 
 /**
@@ -20,22 +21,22 @@ public class EasyRouterApp extends Application {
                 .setDebug(true)
                 .setDefaultRouterCallBack(new IRouterCallBack() {
                     @Override
-                    public void onFound() {
+                    public void onFound(IntentWrapper intentWrapper) {
                         EasyRouterLogUtils.i("default onFound");
                     }
 
                     @Override
-                    public void onLost() {
+                    public void onLost(IntentWrapper intentWrapper) {
                         EasyRouterLogUtils.i("default onLost");
                     }
 
                     @Override
-                    public void onOpenSuccess() {
+                    public void onOpenSuccess(IntentWrapper intentWrapper) {
                         EasyRouterLogUtils.i("default onOpenSuccess");
                     }
 
                     @Override
-                    public void onOpenFailed() {
+                    public void onOpenFailed(IntentWrapper intentWrapper, Throwable e) {
                         EasyRouterLogUtils.i("default onOpenFailed");
                     }
                 })

@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.android.easyrouter.callback.IRouterCallBack;
 import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.dispatcher.dispatcherimpl.ActivityDispatcher;
-import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWraper;
+import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWrapper;
 import com.android.easyrouter.service.IBaseModuleService;
 import com.android.easyrouter.service.ModuleServiceManager;
 import com.android.easyrouter.util.EasyRouterLogUtils;
@@ -41,7 +41,7 @@ public class EasyRouter {
         return ActivityDispatcher.getActivityDispatcher().open(activity, url, routerCallBack);
     }
 
-    public static IntentWraper with(String url) {
+    public static IntentWrapper with(String url) {
         if (!EasyRouterConfig.isInited) {
             EasyRouterLogUtils.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
         }

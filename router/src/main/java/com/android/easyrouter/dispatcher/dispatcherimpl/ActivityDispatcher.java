@@ -10,7 +10,7 @@ import com.android.easyrouter.callback.DefaultRouterCallBack;
 import com.android.easyrouter.callback.IRouterCallBack;
 import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.dispatcher.dispatcherimpl.model.DisPatcherInfo;
-import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWraper;
+import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWrapper;
 import com.android.easyrouter.dispatcher.idispatcher.IActivityDispatcher;
 import com.android.easyrouter.dispatcher.idispatcher.IActivityInitMap;
 import com.android.easyrouter.intercept.IInterceptor;
@@ -73,8 +73,8 @@ public class ActivityDispatcher implements IActivityDispatcher {
         mInterceptors.addAll(interceptors);
     }
 
-    public IntentWraper withUrl(String string) {
-        return new IntentWraper(string);
+    public IntentWrapper withUrl(String string) {
+        return new IntentWrapper(string);
     }
 
     @Override
@@ -89,27 +89,27 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
     @Override
     public boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
-        return realOpen(activity, new IntentWraper(url).withRouterCallBack(routerCallBack)) != null ? true : false;
+        return realOpen(activity, new IntentWrapper(url).withRouterCallBack(routerCallBack)) != null ? true : false;
     }
 
-    public boolean open(Activity activity, IntentWraper intentWraper) {
-        return realOpen(activity, intentWraper) != null ? true : false;
+    public boolean open(Activity activity, IntentWrapper intentWrapper) {
+        return realOpen(activity, intentWrapper) != null ? true : false;
     }
 
-    public Object open(IntentWraper intentWraper) {
-        return realOpen(null, intentWraper);
+    public Object open(IntentWrapper intentWrapper) {
+        return realOpen(null, intentWrapper);
     }
 
-    private Object realOpen(final Activity activity, final IntentWraper intentWraper) {
+    private Object realOpen(final Activity activity, final IntentWrapper intentWrapper) {
         Object object = null;
         IRouterCallBack routerCallBack = mDefaultRouterCallBack;
         try {
             // deal callBack
-            if (intentWraper.mRouterCallBack != null) {
-                routerCallBack = intentWraper.mRouterCallBack;
+            if (intentWrapper.mRouterCallBack != null) {
+                routerCallBack = intentWrapper.mRouterCallBack;
             }
 
-            if (TextUtils.isEmpty(intentWraper.mUrl) || !canOpen(intentWraper.mUrl)) {
+            if (TextUtils.isEmpty(intentWrapper.mUrl) || !canOpen(intentWrapper.mUrl)) {
                 throw new RuntimeException("EasyRouter url mustn't be null");
             }
             //need to redirect
@@ -122,8 +122,8 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
             }
 
-            if (intentWraper.mInterceptors != null && !intentWraper.mInterceptors.isEmpty()) {
-                interceptors.addAll(intentWraper.mInterceptors);
+            if (intentWrapper.mInterceptors != null && !intentWrapper.mInterceptors.isEmpty()) {
+                interceptors.addAll(intentWrapper.mInterceptors);
             }
 
             for (IInterceptor interceptor : interceptors) {
@@ -134,36 +134,36 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
 
             // pass the original url
-            intentWraper.withString(EasyRouterConstant.ORIGINALURL, intentWraper.mUrl);
+            intentWrapper.withString(EasyRouterConstant.ORIGINALURL, intentWrapper.mOriginalUrl);
 
-            intentWraper.mUrl = encodeUrl(intentWraper.mUrl);
-            DisPatcherInfo disPatcherInfo = getTargetClass(intentWraper.mUrl);
+            intentWrapper.mUrl = encodeUrl(intentWrapper.mUrl);
+            DisPatcherInfo disPatcherInfo = getTargetClass(intentWrapper.mUrl);
             if (disPatcherInfo == null) {
                 if (routerCallBack != null) {
-                    routerCallBack.onLost();
+                    routerCallBack.onLost(intentWrapper);
                 }
                 return false;
             }
             if (routerCallBack != null) {
-                routerCallBack.onFound();
+                routerCallBack.onFound(intentWrapper);
             }
 
-            if (intentWraper.openType != EasyRouterConstant.IntentWraperType_Fragment) {
+            if (intentWrapper.openType != EasyRouterConstant.IntentWraperType_Fragment) {
                 // for Activity
                 Intent intent = new Intent(activity == null ? EasyRouterConfig.mApplication : activity, disPatcherInfo.targetClass);
-                intent = setParams(intent, intentWraper.mUrl, disPatcherInfo.matchUrl);
-                intent.putExtras(intentWraper.mBundle);
-                if (intentWraper.mIntentFlag != DEFAULTVALUE) {
-                    intent.addFlags(intentWraper.mIntentFlag);
+                intent = setParams(intent, intentWrapper.mUrl, disPatcherInfo.matchUrl);
+                intent.putExtras(intentWrapper.mBundle);
+                if (intentWrapper.mIntentFlag != DEFAULTVALUE) {
+                    intent.addFlags(intentWrapper.mIntentFlag);
                 }
-                intentWraper.mIntent = intent;
+                intentWrapper.mIntent = intent;
                 if (activity == null) {
-                    intentWraper.mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intentWrapper.mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     // had better force to run in main thread
                     EasyRouterUtils.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            EasyRouterConfig.mApplication.startActivity(intentWraper.mIntent);
+                            EasyRouterConfig.mApplication.startActivity(intentWrapper.mIntent);
                         }
                     });
                 } else {
@@ -171,32 +171,32 @@ public class ActivityDispatcher implements IActivityDispatcher {
                     EasyRouterUtils.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            activity.startActivityForResult(intentWraper.mIntent, intentWraper.mRequestCode);
-                            if (activity != null && intentWraper.mInAnimation != DEFAULTVALUE && intentWraper.mOutAnimation != DEFAULTVALUE) {
-                                activity.overridePendingTransition(intentWraper.mInAnimation, intentWraper.mOutAnimation);
+                            activity.startActivityForResult(intentWrapper.mIntent, intentWrapper.mRequestCode);
+                            if (activity != null && intentWrapper.mInAnimation != DEFAULTVALUE && intentWrapper.mOutAnimation != DEFAULTVALUE) {
+                                activity.overridePendingTransition(intentWrapper.mInAnimation, intentWrapper.mOutAnimation);
                             }
                         }
                     });
                 }
-                object = intentWraper;
+                object = intentWrapper;
             } else {
                 // for Fragment
                 Class fragmentClass = disPatcherInfo.targetClass;
                 Object fragmentInstance = fragmentClass.getConstructor().newInstance();
                 if (fragmentInstance instanceof Fragment) {
-                    ((Fragment) fragmentInstance).setArguments(intentWraper.mBundle);
+                    ((Fragment) fragmentInstance).setArguments(intentWrapper.mBundle);
                 } else if (fragmentInstance instanceof android.support.v4.app.Fragment) {
-                    ((android.support.v4.app.Fragment) fragmentInstance).setArguments(intentWraper.mBundle);
+                    ((android.support.v4.app.Fragment) fragmentInstance).setArguments(intentWrapper.mBundle);
                 }
                 object = fragmentInstance;
             }
             if (routerCallBack != null) {
-                routerCallBack.onOpenSuccess();
+                routerCallBack.onOpenSuccess(intentWrapper);
             }
             return object;
         } catch (Exception e) {
             if (routerCallBack != null) {
-                routerCallBack.onOpenFailed();
+                routerCallBack.onOpenFailed(intentWrapper,e);
             }
             EasyRouterLogUtils.e(e);
             return null;
