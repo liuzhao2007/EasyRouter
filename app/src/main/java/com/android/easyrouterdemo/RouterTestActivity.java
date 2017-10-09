@@ -1,13 +1,10 @@
 package com.android.easyrouterdemo;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.android.easyrouter.EasyRouter;
+import com.android.easyrouter.annotation.AutoAssign;
 import com.android.easyrouter.annotation.DisPatcher;
 import com.android.easyrouter.util.EasyRouterConstant;
 
@@ -18,6 +15,13 @@ import com.android.easyrouter.util.EasyRouterConstant;
 public class RouterTestActivity extends FragmentActivity {
     private TextView tv_routertest;
     private TextView tv_params;
+    @AutoAssign
+    long time;
+    @AutoAssign
+    int age;
+    @AutoAssign
+    double money;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

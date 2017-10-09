@@ -1,6 +1,7 @@
 package com.android.router.compiler;
 
 import com.android.easyrouter.annotation.Interceptor;
+import com.android.easyrouter.compiler.constant.CompilerConstant;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -35,7 +36,7 @@ import static com.squareup.javapoet.JavaFile.builder;
  * Created by liuzhao on 2017/9/20.
  */
 
-@SupportedOptions(com.android.easyrouter.compiler.CompilerConstant.KEY_MODULE_NAME)
+@SupportedOptions(CompilerConstant.KEY_MODULE_NAME)
 @AutoService(Processor.class)
 public class InterceptorProcessor extends AbstractProcessor {
 
@@ -53,7 +54,7 @@ public class InterceptorProcessor extends AbstractProcessor {
         mFiler = processingEnv.getFiler();
         Map<String, String> options = processingEnv.getOptions();
         if (MapUtils.isNotEmpty(options)) {
-            moduleName = options.get(com.android.easyrouter.compiler.CompilerConstant.KEY_MODULE_NAME);
+            moduleName = options.get(CompilerConstant.KEY_MODULE_NAME);
         }
     }
 
@@ -82,7 +83,7 @@ public class InterceptorProcessor extends AbstractProcessor {
 
         if (type != null && !hasDone) {
             try {
-                builder(com.android.easyrouter.compiler.CompilerConstant.AutoCreateInterceptorPackage, type).build().writeTo(mFiler);
+                builder(CompilerConstant.AutoCreateInterceptorPackage, type).build().writeTo(mFiler);
                 hasDone = true;
             } catch (Exception e) {
                 error("wrong!!:" + e.getMessage());
@@ -110,7 +111,7 @@ public class InterceptorProcessor extends AbstractProcessor {
         }
         routerInitBuilder.addStatement("return list");
 
-        return TypeSpec.classBuilder(com.android.easyrouter.compiler.CompilerConstant.AutoCreateInterceptorPrefix + moduleName)
+        return TypeSpec.classBuilder(CompilerConstant.AutoCreateInterceptorPrefix + moduleName)
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(routerInitBuilder.build())
                 .build();

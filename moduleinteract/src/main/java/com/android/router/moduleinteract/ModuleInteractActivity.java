@@ -2,6 +2,7 @@ package com.android.router.moduleinteract;
 
 import android.app.Activity;
 
+import com.android.easyrouter.annotation.AutoAssign;
 import com.android.easyrouter.annotation.DisPatcher;
 
 /**
@@ -9,4 +10,7 @@ import com.android.easyrouter.annotation.DisPatcher;
  */
 @DisPatcher("moduleInteract")
 public class ModuleInteractActivity extends Activity {
+
+//    @AutoAssign
+    int age;
 }

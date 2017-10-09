@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.easyrouter.EasyRouter;
+import com.android.easyrouter.annotation.AutoAssign;
 import com.android.easyrouter.annotation.DisPatcher;
 import com.android.easyrouter.callback.DefaultRouterCallBack;
 import com.android.easyrouter.intercept.IInterceptor;
