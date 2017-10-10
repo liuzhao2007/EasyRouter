@@ -79,7 +79,7 @@ public class AutoAssiginProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Set<? extends Element> autoAssigns = roundEnv.getElementsAnnotatedWith(AutoAssign.class);
         try {
-            categories(autoAssigns);
+            collectData(autoAssigns);
         } catch (Exception e) {
             error("error" + e.toString());
         }
@@ -125,8 +125,9 @@ public class AutoAssiginProcessor extends AbstractProcessor {
                     error("error: " + e.toString());
                 }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
 
@@ -157,7 +158,7 @@ public class AutoAssiginProcessor extends AbstractProcessor {
         return statement;
     }
 
-    private void categories(Set<? extends Element> elements) throws IllegalAccessException {
+    private void collectData(Set<? extends Element> elements) throws IllegalAccessException {
         if (CollectionUtils.isNotEmpty(elements)) {
             for (Element element : elements) {
                 TypeElement enclosingElement = (TypeElement) element.getEnclosingElement();

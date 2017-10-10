@@ -36,7 +36,7 @@ public class EasyRouter {
 
     public static boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
         if (!EasyRouterConfig.isInited) {
-            EasyRouterLogUtils.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
+            EasyRouterLogUtils.e("Serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
             return false;
         }
         return ActivityDispatcher.getActivityDispatcher().open(activity, url, routerCallBack);
@@ -44,7 +44,7 @@ public class EasyRouter {
 
     public static IntentWrapper with(String url) {
         if (!EasyRouterConfig.isInited) {
-            EasyRouterLogUtils.e("serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
+            EasyRouterLogUtils.e("Serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouter.setScheme().init() first");
         }
         return ActivityDispatcher.getActivityDispatcher().withUrl(url);
     }
@@ -55,7 +55,12 @@ public class EasyRouter {
     }
 
 
+    // api for params auto inject
     public static void inject(Object object) {
+        if (object == null) {
+            EasyRouterLogUtils.e("Serious error using inject you can't pass a null param");
+            return;
+        }
         InjectManager.inject(object);
     }
 
