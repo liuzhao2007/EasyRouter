@@ -17,6 +17,15 @@
         </activity>
         <activity android:name="com.android.easyrouterdemo.RouterTestActivity"></activity>
         <activity android:name="com.android.easyrouterdemo.RouterUseInfoActivity"></activity>
+        <activity
+            android:name="com.android.easyrouter.url.EasyRouterUrlActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="easyrouter" /><!--your scheme-->
+            </intent-filter>
+        </activity>
     </application>
-
 </manifest>

@@ -9,9 +9,10 @@
 4. 界面、服务、拦截器均支持多Module；
 5. 基于Apt，界面、服务、拦截器等均可自动注册；
 6. 可传递Bundle支持的所有数据类型；
-7. 支持获取Fragment；
-8. 支持全局、局部过程监听：降级、打开后等；
-9. Api简单、实现高性能；
+7. 支持自动注入参数到目标界面；
+8. 支持获取Fragment；
+9. 支持全局、局部过程监听：降级、打开后等；
+10. Api简单、实现高性能；
 
 ![image](https://github.com/liuzhao2007/EasyRouter/blob/master/app/gif/EasyRouter.gif)
 
@@ -19,6 +20,7 @@
 1. Module内、跨Module界面跳转，界面解耦；
 2. 界面跳转过程拦截：条件拦截（eg：未登录）、重定向等；
 3. 跨Module方法调用，Module间解耦；
+4. 外部Url跳转应用内界面；
 
 # 三、集成使用
 ### 1. 添加依赖与配置
@@ -211,6 +213,25 @@
     // 传入Fragment继承的类，android.app.Fragment或者android.support.v4.app.Fragment
     Fragment fragment = EasyRouter.with("easyrouter://fragmenttest").getFragment(Fragment.class);
 ```
+
+### 6、外部Url跳转应用内界面；
+**AndroidManifest.xml中注册**
+```
+    <activity
+        android:name="com.android.easyrouter.url.EasyRouterUrlActivity"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="easyrouter" /><!--改成自己的Scheme-->
+        </intent-filter>
+    </activity>
+```
+
+**备注：也可以使用自己的Activity：**
+
+- ```只需要调用EasyRouter.open(Uri.toString());即可```
 
 # 五、其它设置
 ### 1、打开Log；
