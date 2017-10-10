@@ -233,6 +233,20 @@
 
 - ```只需要调用EasyRouter.open(Uri.toString());即可```
 
+### 7、自动注入参数到界面；
+在Activity中需要自动传参的参数上加上注解@AutoAssign，则会自动通过Intent赋值。例如：
+
+```
+    @AutoAssign
+    long time;
+    @AutoAssign
+    int age;
+    @AutoAssign
+    String url;
+```
+
+**备注：目前仅支持基本数据类型和String；**
+
 # 五、其它设置
 ### 1、打开Log；
 
