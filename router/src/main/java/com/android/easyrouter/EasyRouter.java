@@ -6,6 +6,7 @@ import com.android.easyrouter.callback.IRouterCallBack;
 import com.android.easyrouter.config.EasyRouterConfig;
 import com.android.easyrouter.dispatcher.dispatcherimpl.ActivityDispatcher;
 import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWrapper;
+import com.android.easyrouter.inject.InjectManager;
 import com.android.easyrouter.service.IBaseModuleService;
 import com.android.easyrouter.service.ModuleServiceManager;
 import com.android.easyrouter.util.EasyRouterLogUtils;
@@ -51,6 +52,11 @@ public class EasyRouter {
     // api for service
     public static <T extends IBaseModuleService> T getModuleService(Class<T> tClass) {
         return ModuleServiceManager.getModuleService(tClass);
+    }
+
+
+    public static void inject(Object object) {
+        InjectManager.inject(object);
     }
 
 }

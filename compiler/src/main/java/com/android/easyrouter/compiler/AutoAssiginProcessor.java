@@ -89,6 +89,7 @@ public class AutoAssiginProcessor extends AbstractProcessor {
             for (Map.Entry<TypeElement, List<Element>> entry : fieldMaps.entrySet()) {
                 MethodSpec.Builder autoAssignMethodBuilder = MethodSpec.methodBuilder("autoAssign")
                         .addModifiers(Modifier.PUBLIC)
+                        .addModifiers(Modifier.STATIC)
                         .addParameter(objectParamSpec);
 
                 TypeElement parent = entry.getKey();
@@ -119,7 +120,7 @@ public class AutoAssiginProcessor extends AbstractProcessor {
                     if (!hashMaps.containsKey(fileName) || !hashMaps.get(fileName)) {
                         JavaFile.builder(packageName, helper.build()).build().writeTo(mFiler);
                     }
-                    hashMaps.put(fileName,true);
+                    hashMaps.put(fileName, true);
                 } catch (Exception e) {
                     error("error: " + e.toString());
                 }
