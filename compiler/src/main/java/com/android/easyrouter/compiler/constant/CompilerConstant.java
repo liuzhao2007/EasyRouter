@@ -21,5 +21,4 @@ public class CompilerConstant {
     public static final String DOUBEL = LANG + ".Double";
     public static final String BOOLEAN = LANG + ".Boolean";
     public static final String STRING = LANG + ".String";
-    public static final String PARCELABLE = "android.os.Parcelable";
 }

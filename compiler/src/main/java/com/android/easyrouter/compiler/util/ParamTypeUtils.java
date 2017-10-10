@@ -6,7 +6,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.android.easyrouter.compiler.constant.CompilerConstant.BYTE;
-import static com.android.easyrouter.compiler.constant.CompilerConstant.PARCELABLE;
 import static com.android.easyrouter.compiler.constant.CompilerConstant.SHORT;
 import static com.android.easyrouter.compiler.constant.CompilerConstant.*;
 
@@ -17,13 +16,10 @@ public class ParamTypeUtils {
 
     private Types types;
     private Elements elements;
-    private TypeMirror parcelableType;
 
     public ParamTypeUtils(Types types, Elements elements) {
         this.types = types;
         this.elements = elements;
-
-        parcelableType = this.elements.getTypeElement(PARCELABLE).asType();
     }
 
     /**
@@ -57,12 +53,8 @@ public class ParamTypeUtils {
                 return ParamTypeKinds.BOOLEAN.ordinal();
             case STRING:
                 return ParamTypeKinds.STRING.ordinal();
-            default:    // Other side, maybe the PARCELABLE or OBJECT.
-                if (types.isSubtype(typeMirror, parcelableType)) {  // PARCELABLE
-                    return ParamTypeKinds.PARCELABLE.ordinal();
-                } else {    // For others
-                    return ParamTypeKinds.OBJECT.ordinal();
-                }
+            default:
+                return ParamTypeKinds.OBJECT.ordinal();
         }
     }
 }

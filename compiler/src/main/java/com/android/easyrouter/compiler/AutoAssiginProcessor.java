@@ -110,9 +110,7 @@ public class AutoAssiginProcessor extends AbstractProcessor {
                     String originalValue = "realObject." + fieldName;
                     String statment = "realObject." + fieldName + " = realObject.";
                     statment += "getIntent().";
-
                     statment = buildStatement(originalValue, statment, paramTypeUtils.typeExchange(element), true);
-
                     autoAssignMethodBuilder.addStatement(statment, StringUtils.isEmpty(fieldConfig.name()) ? fieldName : fieldConfig.name());
                 }
                 helper.addMethod(autoAssignMethodBuilder.build());
@@ -150,10 +148,6 @@ public class AutoAssiginProcessor extends AbstractProcessor {
             statement += (isActivity ? ("getDoubleExtra($S, " + originalValue + ")") : ("getDouble($S)"));
         } else if (type == ParamTypeKinds.STRING.ordinal()) {
             statement += (isActivity ? ("getStringExtra($S)") : ("getString($S)"));
-        } else if (type == ParamTypeKinds.PARCELABLE.ordinal()) {
-            statement += (isActivity ? ("getParcelableExtra($S)") : ("getParcelable($S)"));
-        } else if (type == ParamTypeKinds.OBJECT.ordinal()) {
-            statement = "serializationService.json2Object(realObject." + (isActivity ? "getIntent()." : "getArguments().") + (isActivity ? "getStringExtra($S)" : "getString($S)") + ", $T.class)";
         }
         return statement;
     }
