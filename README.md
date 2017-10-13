@@ -36,9 +36,9 @@
 	}
 	
     dependencies {
-        compile 'com.easyrouter:router-api:1.2.1'
-        compile 'com.easyrouter:router-annotation:1.2.1'
-        annotationProcessor 'com.easyrouter:router-compiler:1.2.1'
+        compile 'com.easyrouter:router-api:1.2.3'
+        compile 'com.easyrouter:router-annotation:1.2.3'
+        annotationProcessor 'com.easyrouter:router-compiler:1.2.3'
     }
 ```
 在Project级别的build.gradle中添加：

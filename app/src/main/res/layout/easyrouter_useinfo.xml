@@ -24,7 +24,7 @@
             android:layout_marginTop="20dp"
             android:gravity="left"
             android:lineSpacingExtra="8dp"
-            android:text="1. 通过url打开Activity，实现界面间解耦；\n2. 通过服务实现方法调用，实现Module间方法调用解耦；\n3. 通过拦截器实现界面跳转的处理：条件拦截、埋点统计等；\n4. 界面、服务、拦截器均支持多Module；\n5. 基于Apt，界面、服务、拦截器等均可自动注册；\n6. 可传递Bundle支持的所有数据类型；\n7. 支持获取Fragment；\n8. 支持全局、局部过程监听：降级、打开后等；\n9. Api简单、实现高性能；" />
+            android:text="1. 通过url打开Activity，实现界面间解耦；\n2. 通过服务实现方法调用，实现Module间方法调用解耦；\n3. 通过拦截器实现界面跳转的处理：条件拦截、埋点统计等；\n4. 界面、服务、拦截器均支持多Module；\n5. 基于Apt，界面、服务、拦截器等均可自动注册；\n6. 可传递Bundle支持的所有数据类型；\n7. 支持自动注入参数到目标界面；支持自动注入参数到目标界面；\n8.支持获取Fragment；\n9. 支持全局、局部过程监听：降级、打开后等；\n10. Api简单、实现高性能；" />
 
 
         <TextView
@@ -43,7 +43,7 @@
             android:gravity="left"
             android:lineSpacingExtra="8dp"
             android:paddingBottom="30dp"
-            android:text="1. Module内、跨Module界面跳转，界面解耦；\n2. 界面跳转过程拦截：条件拦截（eg：未登录）、重定向等；\n3. 跨Module方法调用，Module间解耦；" />
+            android:text="1. Module内、跨Module界面跳转，界面解耦；\n2. 界面跳转过程拦截：条件拦截（eg：未登录）、重定向等；\n3. 跨Module方法调用，Module间解耦；\n4.外部Url跳转应用内界面；" />
 
     </LinearLayout>
 </ScrollView>
