@@ -234,7 +234,8 @@
 - ```只需要调用EasyRouter.open(Uri.toString());即可```
 
 ### 7、自动注入参数到界面；
-在Activity中需要自动传参的参数上加上注解@AutoAssign，则会自动通过Intent赋值。例如：
+- 在目标Activity中加上EasyRouter.inject(this);
+- 在Activity中需要自动传参的参数上加上注解@AutoAssign，则会自动通过Intent赋值。例如：
 
 ```
     @AutoAssign
