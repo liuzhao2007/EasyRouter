@@ -127,8 +127,8 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
 
             for (IInterceptor interceptor : interceptors) {
-                if (interceptor != null && interceptor.intercept()) {
-                    interceptor.onIntercepted();
+                if (interceptor != null && interceptor.intercept(intentWrapper)) {
+                    interceptor.onIntercepted(intentWrapper);
                     throw new RuntimeException("Original url is intercepted in EasyRouter");
                 }
             }

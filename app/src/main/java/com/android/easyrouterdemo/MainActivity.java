@@ -10,6 +10,7 @@ import com.android.easyrouter.EasyRouter;
 import com.android.easyrouter.annotation.AutoAssign;
 import com.android.easyrouter.annotation.DisPatcher;
 import com.android.easyrouter.callback.DefaultRouterCallBack;
+import com.android.easyrouter.dispatcher.dispatcherimpl.model.IntentWrapper;
 import com.android.easyrouter.intercept.IInterceptor;
 import com.android.easyrouter.service.BaseModuleService;
 import com.android.easyrouter.util.EasyRouterLogUtils;
@@ -48,14 +49,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 // Example for intercept
                 EasyRouter.with("easyrouter://routertest").addInterceptor(new IInterceptor() {
                     @Override
-                    public boolean intercept() {
+                    public boolean intercept(IntentWrapper intentWrapper) {
                         EasyRouterLogUtils.i("check if intercept");
                         Toast.makeText(getApplicationContext(), "Router is intercepted by me ", 1).show();
                         return true;
                     }
 
                     @Override
-                    public void onIntercepted() {
+                    public void onIntercepted(IntentWrapper intentWrapper) {
                         EasyRouterLogUtils.i("onIntercepted");
                     }
                 }).open();
