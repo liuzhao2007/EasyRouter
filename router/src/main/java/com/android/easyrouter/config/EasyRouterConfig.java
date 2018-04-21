@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public class EasyRouterConfig {
-    private static EasyRouterConfig mEasyRouterConfig;
+    private static volatile EasyRouterConfig mEasyRouterConfig;
     public static Application mApplication;
     public static boolean isInited;
 

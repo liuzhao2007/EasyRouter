@@ -28,7 +28,7 @@ import java.util.Set;
  * Created by liuzhao on 16/10/21.
  */
 public class ActivityDispatcher implements IActivityDispatcher {
-    private static ActivityDispatcher activityDispatcher;
+    private static volatile ActivityDispatcher activityDispatcher;
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
     public static List<String> pkNames = new ArrayList<String>();
@@ -89,7 +89,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
     @Override
     public boolean open(Activity activity, String url, IRouterCallBack routerCallBack) {
-        return realOpen(activity, new IntentWrapper(url).withRouterCallBack(routerCallBack)) != null ? true : false;
+        return realOpen(activity, new IntentWrapper(url).withRouterCallBack(routerCallBack)) != null;
     }
 
     public boolean open(Activity activity, IntentWrapper intentWrapper) {
@@ -110,14 +110,16 @@ public class ActivityDispatcher implements IActivityDispatcher {
             }
 
             if (TextUtils.isEmpty(intentWrapper.mUrl) || !canOpen(intentWrapper.mUrl)) {
-                throw new RuntimeException("EasyRouter url mustn't be null");
+                throw new RuntimeException("EasyRouter's url mustn't be null");
             }
-            //need to redirect
 
-            // has to Force conversion now the compiler can't get Model
-            List<IInterceptor> interceptors = new ArrayList<>();
+            if (!canOpen(intentWrapper.mUrl)) {
+                throw new RuntimeException("EasyRouter'url doesn't match the given host");
+            }
+
+            List<IInterceptor> interceptors = new ArrayList<IInterceptor>();
             for (Object mObject : mInterceptors) {
-                if (mObject != null && mObject instanceof IInterceptor) {
+                if (mObject != null) {
                     interceptors.add((IInterceptor) mObject);
                 }
             }
@@ -133,20 +135,16 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
             }
 
-            // pass the original url
+            // pass the original url to the destination
             intentWrapper.withString(EasyRouterConstant.ORIGINALURL, intentWrapper.mOriginalUrl);
 
             intentWrapper.mUrl = encodeUrl(intentWrapper.mUrl);
             DisPatcherInfo disPatcherInfo = getTargetClass(intentWrapper.mUrl);
             if (disPatcherInfo == null) {
-                if (routerCallBack != null) {
-                    routerCallBack.onLost(intentWrapper);
-                }
-                return false;
+                routerCallBack.onLost(intentWrapper);
+                return null;
             }
-            if (routerCallBack != null) {
-                routerCallBack.onFound(intentWrapper);
-            }
+            routerCallBack.onFound(intentWrapper);
 
             if (intentWrapper.openType != EasyRouterConstant.IntentWraperType_Fragment) {
                 // for Activity
@@ -172,7 +170,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
                         @Override
                         public void run() {
                             activity.startActivityForResult(intentWrapper.mIntent, intentWrapper.mRequestCode);
-                            if (activity != null && intentWrapper.mInAnimation != DEFAULTVALUE && intentWrapper.mOutAnimation != DEFAULTVALUE) {
+                            if (intentWrapper.mInAnimation != DEFAULTVALUE && intentWrapper.mOutAnimation != DEFAULTVALUE) {
                                 activity.overridePendingTransition(intentWrapper.mInAnimation, intentWrapper.mOutAnimation);
                             }
                         }
@@ -190,14 +188,10 @@ public class ActivityDispatcher implements IActivityDispatcher {
                 }
                 object = fragmentInstance;
             }
-            if (routerCallBack != null) {
-                routerCallBack.onOpenSuccess(intentWrapper);
-            }
+            routerCallBack.onOpenSuccess(intentWrapper);
             return object;
         } catch (Exception e) {
-            if (routerCallBack != null) {
-                routerCallBack.onOpenFailed(intentWrapper,e);
-            }
+            routerCallBack.onOpenFailed(intentWrapper, e);
             EasyRouterLogUtils.e(e);
             return null;
         }
@@ -295,23 +289,6 @@ public class ActivityDispatcher implements IActivityDispatcher {
         }
         return realUrl;
     }
-
-    /**
-     * 特殊处理对于Fragment的跳转
-     *
-     * @param url
-     * @param suffix
-     * @return
-     */
-    public static String dealFragment(String url, String suffix) {
-        if (url.contains("?")) {
-            String[] strings = url.split("\\?");
-            return strings != null && strings.length == 2 ? strings[0] + suffix + "?" + strings[1] : url + suffix;
-        } else {
-            return url + suffix;
-        }
-    }
-
 
     public boolean canOpen(String url) {
         return Uri.parse(url).getScheme().equals(SCHEME);
