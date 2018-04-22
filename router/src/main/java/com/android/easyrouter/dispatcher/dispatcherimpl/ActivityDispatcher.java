@@ -28,49 +28,47 @@ import java.util.Set;
  * Created by liuzhao on 16/10/21.
  */
 public class ActivityDispatcher implements IActivityDispatcher {
-    private static volatile ActivityDispatcher activityDispatcher;
+    private static volatile ActivityDispatcher sActivityDispatcher;
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
-    public static List<String> pkNames = new ArrayList<String>();
-    public HashMap<String, Class> activityMaps = new HashMap<String, Class>();
-    private static IRouterCallBack mDefaultRouterCallBack;
-    public static List<Object> mInterceptors = new ArrayList<Object>();
-
-    private static final String PARAM_URL = "url";//获取需要编码的url
-    private static final String CHARSET = "UTF-8";//编码的字符集
+    public static List<String> sModuleNames = new ArrayList<String>();// store module names
+    public HashMap<String, Class> mRealActivityMaps = new HashMap<String, Class>();// store the mapping of strings and class
+    private static IRouterCallBack sDefaultRouterCallBack;
+    public static List<Object> sRealInterceptors = new ArrayList<Object>();// store the interceptor for UI Action
+    private static final String CHARSET = "UTF-8";//code character set
 
     private ActivityDispatcher() {
     }
 
-    public static ActivityDispatcher getActivityDispatcher() {
-        if (activityDispatcher == null) {
+    public static ActivityDispatcher getsActivityDispatcher() {
+        if (sActivityDispatcher == null) {
             synchronized (ActivityDispatcher.class) {
-                if (activityDispatcher == null) {
-                    activityDispatcher = new ActivityDispatcher();
-                    mDefaultRouterCallBack = new DefaultRouterCallBack();
+                if (sActivityDispatcher == null) {
+                    sActivityDispatcher = new ActivityDispatcher();
+                    sDefaultRouterCallBack = new DefaultRouterCallBack();
                 }
             }
         }
-        return activityDispatcher;
+        return sActivityDispatcher;
     }
 
     public void setDefaultRouterCallBack(IRouterCallBack defaultRouterCallBack) {
-        mDefaultRouterCallBack = defaultRouterCallBack;
+        sDefaultRouterCallBack = defaultRouterCallBack;
     }
 
     public void initActivityMaps(IActivityInitMap activityInitMap) {
-        activityInitMap.initActivityMap(activityMaps);
+        activityInitMap.initActivityMap(mRealActivityMaps);
         String name = activityInitMap.getClass().getSimpleName();
         if (!TextUtils.isEmpty(name) && name.contains("_")) {
             String splits[] = name.split("_");
-            if (splits != null && splits.length > 1 && !pkNames.contains(splits[1])) {
-                pkNames.add(splits[1]);
+            if (splits != null && splits.length > 1 && !sModuleNames.contains(splits[1])) {
+                sModuleNames.add(splits[1]);
             }
         }
     }
 
     public void initInterceptors(List<IInterceptor> interceptors) {
-        mInterceptors.addAll(interceptors);
+        sRealInterceptors.addAll(interceptors);
     }
 
     public IntentWrapper withUrl(String string) {
@@ -102,23 +100,23 @@ public class ActivityDispatcher implements IActivityDispatcher {
 
     private Object realOpen(final Activity activity, final IntentWrapper intentWrapper) {
         Object object = null;
-        IRouterCallBack routerCallBack = mDefaultRouterCallBack;
+        IRouterCallBack routerCallBack = sDefaultRouterCallBack;
         try {
+            if (TextUtils.isEmpty(intentWrapper.mUrl) || !canOpen(intentWrapper.mUrl)) {
+                throw new RuntimeException("EasyRouter's url mustn't be null");
+            }
+            if (!canOpen(intentWrapper.mUrl)) {
+                throw new RuntimeException("EasyRouter'url doesn't match the given host");
+            }
+
             // deal callBack
             if (intentWrapper.mRouterCallBack != null) {
                 routerCallBack = intentWrapper.mRouterCallBack;
             }
 
-            if (TextUtils.isEmpty(intentWrapper.mUrl) || !canOpen(intentWrapper.mUrl)) {
-                throw new RuntimeException("EasyRouter's url mustn't be null");
-            }
-
-            if (!canOpen(intentWrapper.mUrl)) {
-                throw new RuntimeException("EasyRouter'url doesn't match the given host");
-            }
-
+            // may optimize
             List<IInterceptor> interceptors = new ArrayList<IInterceptor>();
-            for (Object mObject : mInterceptors) {
+            for (Object mObject : sRealInterceptors) {
                 if (mObject != null) {
                     interceptors.add((IInterceptor) mObject);
                 }
@@ -275,7 +273,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
     }
 
     /**
-     * 对Url进行编码；规则的调整。
+     * 对Url进行编码；
      *
      * @param url
      * @return
@@ -304,19 +302,19 @@ public class ActivityDispatcher implements IActivityDispatcher {
         int currentPathSegmentSize = 0;
 
         //此处scheme已经校验；放心使用。
-        for (String currentUrl : activityMaps.keySet()) {
-            currentUri = Uri.parse(currentUrl);
+        for (String currentCheckUrl : mRealActivityMaps.keySet()) {
+            currentUri = Uri.parse(currentCheckUrl);
             currentHost = currentUri.getHost();
             currentPathSegmentSize = currentUri.getPathSegments().size();
             if (TextUtils.equals(currentHost, targetHost) && pathSegmentSize == currentPathSegmentSize) {
-                //此处有优化空间。
+                //may optimize
                 if (pathSegmentSize > 0 && currentPathSegmentSize > 0
                         && !TextUtils.equals(currentUri.getPathSegments().get(0), targetUri.getPathSegments().get(0))) {
                     break;
                 }
                 DisPatcherInfo disPatcherInfo = new DisPatcherInfo();
-                disPatcherInfo.targetClass = activityMaps.get(currentUrl);
-                disPatcherInfo.matchUrl = currentUrl;
+                disPatcherInfo.targetClass = mRealActivityMaps.get(currentCheckUrl);
+                disPatcherInfo.matchUrl = currentCheckUrl;
                 return disPatcherInfo;
             }
         }

@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by liuzhao on 2017/9/29.
+ * EasyRouter的配置类
  */
 
 public class EasyRouterConfig {
@@ -35,16 +36,18 @@ public class EasyRouterConfig {
         if (!isInited) {
             mApplication = application;
             try {
+                // deal dispatcher and service
                 Class routerInit = Class.forName("com.android.easyrouter.RouterInit");
                 if (routerInit != null) {
                     routerInit.getMethod("init").invoke(null);
                 }
-                for (String string : ActivityDispatcher.pkNames) {
+                for (String string : ActivityDispatcher.sModuleNames) {
                     EasyRouterLogUtils.i(string);
-                    Class moduleInterceptor = Class.forName("com.android.easyrouter.interceptor.AutoCreateInterceptor_" + string);
+                    // deal interceptor
+                    Class moduleInterceptor = Class.forName("com.android.easyrouter.interceptor.AutoCreateModuleInterceptor_" + string);
                     if (moduleInterceptor != null) {
                         List list = (List) moduleInterceptor.getMethod("initModuleInterceptor").invoke(null);
-                        ActivityDispatcher.mInterceptors.addAll(list);
+                        ActivityDispatcher.sRealInterceptors.addAll(list);
                     }
                 }
                 isInited = true;
@@ -61,13 +64,13 @@ public class EasyRouterConfig {
     }
 
     public EasyRouterConfig setScheme(String scheme) {
-        ActivityDispatcher.getActivityDispatcher().setScheme(scheme);
+        ActivityDispatcher.getsActivityDispatcher().setScheme(scheme);
         return this;
     }
 
     public EasyRouterConfig setDefaultRouterCallBack(IRouterCallBack defaultRouterCallBack) {
         if (defaultRouterCallBack != null) {
-            ActivityDispatcher.getActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
+            ActivityDispatcher.getsActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
         }
         EasyRouterLogUtils.i("EasyRouter setDefaultRouterCallBack");
         return this;

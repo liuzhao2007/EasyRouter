@@ -13,6 +13,7 @@ import com.android.easyrouter.util.EasyRouterLogUtils;
 
 /**
  * Created by liuzhao on 2017/9/12.
+ * EasyRouter的调用类
  */
 
 public class EasyRouter {
@@ -38,14 +39,14 @@ public class EasyRouter {
             EasyRouterLogUtils.e("Serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouterConfig.getInstance().setScheme.init() first");
             return false;
         }
-        return ActivityDispatcher.getActivityDispatcher().open(activity, url, routerCallBack);
+        return ActivityDispatcher.getsActivityDispatcher().open(activity, url, routerCallBack);
     }
 
     public static IntentWrapper with(String url) {
         if (!EasyRouterConfig.isInited) {
             EasyRouterLogUtils.e("Serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouterConfig.getInstance().setScheme.init() first");
         }
-        return ActivityDispatcher.getActivityDispatcher().withUrl(url);
+        return ActivityDispatcher.getsActivityDispatcher().withUrl(url);
     }
 
     // api for service
