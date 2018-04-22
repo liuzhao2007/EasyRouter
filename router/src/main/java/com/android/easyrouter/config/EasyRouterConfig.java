@@ -47,7 +47,7 @@ public class EasyRouterConfig {
                     Class moduleInterceptor = Class.forName("com.android.easyrouter.interceptor.AutoCreateModuleInterceptor_" + string);
                     if (moduleInterceptor != null) {
                         List list = (List) moduleInterceptor.getMethod("initModuleInterceptor").invoke(null);
-                        ActivityDispatcher.sRealInterceptors.addAll(list);
+                        ActivityDispatcher.getActivityDispatcher().initInterceptors(list);
                     }
                 }
                 isInited = true;
@@ -64,13 +64,13 @@ public class EasyRouterConfig {
     }
 
     public EasyRouterConfig setScheme(String scheme) {
-        ActivityDispatcher.getsActivityDispatcher().setScheme(scheme);
+        ActivityDispatcher.getActivityDispatcher().setScheme(scheme);
         return this;
     }
 
     public EasyRouterConfig setDefaultRouterCallBack(IRouterCallBack defaultRouterCallBack) {
         if (defaultRouterCallBack != null) {
-            ActivityDispatcher.getsActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
+            ActivityDispatcher.getActivityDispatcher().setDefaultRouterCallBack(defaultRouterCallBack);
         }
         EasyRouterLogUtils.i("EasyRouter setDefaultRouterCallBack");
         return this;

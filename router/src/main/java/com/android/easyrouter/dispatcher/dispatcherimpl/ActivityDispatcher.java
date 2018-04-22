@@ -32,15 +32,15 @@ public class ActivityDispatcher implements IActivityDispatcher {
     public static String SCHEME = "easyrouter";
     private int DEFAULTVALUE = -1;
     public static List<String> sModuleNames = new ArrayList<String>();// store module names
-    public HashMap<String, Class> mRealActivityMaps = new HashMap<String, Class>();// store the mapping of strings and class
+    private HashMap<String, Class> mRealActivityMaps = new HashMap<String, Class>();// store the mapping of strings and class
     private static IRouterCallBack sDefaultRouterCallBack;
-    public static List<Object> sRealInterceptors = new ArrayList<Object>();// store the interceptor for UI Action
+    private static List<IInterceptor> sRealInterceptors = new ArrayList<IInterceptor>();// store the interceptor for UI Action
     private static final String CHARSET = "UTF-8";//code character set
 
     private ActivityDispatcher() {
     }
 
-    public static ActivityDispatcher getsActivityDispatcher() {
+    public static ActivityDispatcher getActivityDispatcher() {
         if (sActivityDispatcher == null) {
             synchronized (ActivityDispatcher.class) {
                 if (sActivityDispatcher == null) {
@@ -68,6 +68,9 @@ public class ActivityDispatcher implements IActivityDispatcher {
     }
 
     public void initInterceptors(List<IInterceptor> interceptors) {
+        if (interceptors == null) {
+            return;
+        }
         sRealInterceptors.addAll(interceptors);
     }
 

@@ -7,6 +7,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.collections4.MapUtils;
@@ -94,17 +95,16 @@ public class InterceptorProcessor extends AbstractProcessor {
     }
 
     private TypeSpec getInterceptorInitializer(Set<? extends Element> interceptorElements) throws ClassNotFoundException {
-        ParameterizedTypeName mapTypeName = ParameterizedTypeName
-                .get(ClassName.get(List.class),
-                        ClassName.get(Object.class));
-        ParameterSpec mapParameterSpec = ParameterSpec.builder(mapTypeName, "interceptors")
-                .build();
+        ClassName interceptor = ClassName.get("com.android.easyrouter.intercept", "IInterceptor");
+        ClassName list = ClassName.get("java.util", "List");
+        TypeName interceptorList = ParameterizedTypeName.get(list, interceptor);
+
         MethodSpec.Builder routerInitBuilder = MethodSpec
                 .methodBuilder("initModuleInterceptor")
-                .returns(List.class)
+                .returns(interceptorList)
                 .addModifiers(Modifier.PUBLIC)
                 .addModifiers(Modifier.STATIC);
-        routerInitBuilder.addStatement("List list = new java.util.ArrayList()");
+        routerInitBuilder.addStatement("List<IInterceptor> list = new java.util.ArrayList()");
         for (Element element : interceptorElements) {
             routerInitBuilder.addStatement("list.add(new $T())",
                     ClassName.get((TypeElement) element));

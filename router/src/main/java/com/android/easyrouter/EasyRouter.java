@@ -39,14 +39,14 @@ public class EasyRouter {
             EasyRouterLogUtils.e("Serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouterConfig.getInstance().setScheme.init() first");
             return false;
         }
-        return ActivityDispatcher.getsActivityDispatcher().open(activity, url, routerCallBack);
+        return ActivityDispatcher.getActivityDispatcher().open(activity, url, routerCallBack);
     }
 
     public static IntentWrapper with(String url) {
         if (!EasyRouterConfig.isInited) {
             EasyRouterLogUtils.e("Serious error EasyRouter hasn't been inited !!! Before using , You must call EasyRouterConfig.getInstance().setScheme.init() first");
         }
-        return ActivityDispatcher.getsActivityDispatcher().withUrl(url);
+        return ActivityDispatcher.getActivityDispatcher().withUrl(url);
     }
 
     // api for service

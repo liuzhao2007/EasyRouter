@@ -45,12 +45,12 @@ public class IntentWrapper {
     }
 
     public boolean open(IRouterCallBack routerCallBack) {
-        return ActivityDispatcher.getsActivityDispatcher().open(null, withRouterCallBack(routerCallBack));
+        return ActivityDispatcher.getActivityDispatcher().open(null, withRouterCallBack(routerCallBack));
     }
 
     public boolean open(Activity activity, int requestCode) {
         mRequestCode = requestCode;
-        return ActivityDispatcher.getsActivityDispatcher().open(activity, this);
+        return ActivityDispatcher.getActivityDispatcher().open(activity, this);
     }
 
     public <T> T getFragment(Class<T> tClass) {
@@ -59,7 +59,7 @@ public class IntentWrapper {
             return null;
         }
         openType = EasyRouterConstant.IntentWraperType_Fragment;
-        Object object = ActivityDispatcher.getsActivityDispatcher().open(this);
+        Object object = ActivityDispatcher.getActivityDispatcher().open(this);
         try {
             return (T) object;
         } catch (ClassCastException e) {
