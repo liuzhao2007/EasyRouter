@@ -57,6 +57,9 @@ public class ActivityDispatcher implements IActivityDispatcher {
     }
 
     public void initActivityMaps(IActivityInitMap activityInitMap) {
+        if (activityInitMap == null) {
+            return;
+        }
         activityInitMap.initActivityMap(mRealActivityMaps);
         String name = activityInitMap.getClass().getSimpleName();
         if (!TextUtils.isEmpty(name) && name.contains("_")) {
@@ -94,7 +97,7 @@ public class ActivityDispatcher implements IActivityDispatcher {
     }
 
     public boolean open(Activity activity, IntentWrapper intentWrapper) {
-        return realOpen(activity, intentWrapper) != null ? true : false;
+        return realOpen(activity, intentWrapper) != null;
     }
 
     public Object open(IntentWrapper intentWrapper) {
